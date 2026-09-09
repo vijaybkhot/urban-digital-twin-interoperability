@@ -109,17 +109,24 @@ and [urban-resilience guardrails](docs/decisions/006-urban-resilience-real-data-
 - Contributor, conduct, and security policies.
 - One-command local validation and pull-request/main GitHub Actions checks.
 - Public landing-page, architecture, and roadmap status alignment.
+- Minimum open-source release audit and advisor handoff (Issue #77).
+- Scholarly citation metadata and the archived `v0.1.0` release (Issue #79).
+- A live, credential-free Vercel deployment (Issue #78) — see the README's
+  "Live research demo" section.
 
 ### Tracked follow-up work
 
-- Complete the minimum-release audit and advisor handoff.
-- Add scholarly citation metadata and an archived release.
 - Add focused scientific-geometry unit tests.
 - Add screenshots and a reproducible demonstration walkthrough.
 - Publish a longer NSF-oriented architecture and use-case brief.
 - Improve dependency, code-security, accessibility, and release automation.
+- Add contributor-friendly issue/pull-request templates and a generated-data
+  reproducibility manifest.
 
-See the [Open-Source Ecosystem Readiness tracker](https://github.com/vijaybkhot/urban-digital-twin-interoperability/issues/89).
+Current status of each item lives under the
+[`OSR 3 — Independent Bonus Achievements`](https://github.com/vijaybkhot/urban-digital-twin-interoperability/milestone/12)
+milestone; see the [Open-Source Ecosystem Readiness tracker](https://github.com/vijaybkhot/urban-digital-twin-interoperability/issues/89)
+for the full history.
 
 ## Longer-term research directions
 

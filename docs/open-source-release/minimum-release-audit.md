@@ -187,7 +187,11 @@ errors, and the ArcGIS test passed.
 
 ## Remaining limitations
 
-- No public hosted application is part of the minimum release.
+- No public hosted application is part of the minimum release. (Accurate as
+  of this audit; a live, credential-free Vercel deployment was added the
+  following day in [PR #98](https://github.com/vijaybkhot/urban-digital-twin-interoperability/pull/98),
+  merged 2026-09-01 — see the README's "Live research demo" section. Addendum
+  added 2026-09-09 during the September 2026 research handoff, HO-03/#101.)
 - External acquisition scripts depend on the availability and current terms of
   OSM/Overpass, FEMA, and USGS services; validation uses committed local data.
 - Optional Cesium ion and ArcGIS services require user-supplied credentials.
