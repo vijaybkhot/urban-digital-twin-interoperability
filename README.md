@@ -246,7 +246,8 @@ photogrammetric reconstruction through its browser workflow.
 ### Requirements
 
 - Git
-- Node.js `22.12.0` for the reproducible project configuration
+- Node.js `20.19.0` or newer; Node.js `22.12.0` is the repository's pinned
+  development version
 - npm, included with Node.js
 - A browser with WebGL support
 
@@ -354,9 +355,10 @@ The command validates:
 - TypeScript compilation and the Vite production build.
 
 The [GitHub Actions workflow](.github/workflows/validation.yml) runs the same
-command for every pull request and push to `main` using Node 22 and `npm ci`.
-It requires no repository secret and does not fetch new OSM, FEMA, USGS,
-Cesium ion, or ArcGIS data.
+command for every pull request and push to `main`, using the Node version
+pinned in `.nvmrc` (currently `22.12.0`) and `npm ci`. It requires no
+repository secret and does not fetch new OSM, FEMA, USGS, Cesium ion, or
+ArcGIS data.
 
 Existing protobuf dynamic-evaluation and Vite bundle-size notices are known
 non-blocking warnings. They are not suppressed; a validator, TypeScript, or
