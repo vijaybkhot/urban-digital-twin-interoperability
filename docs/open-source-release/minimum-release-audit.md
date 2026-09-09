@@ -5,6 +5,9 @@ Audit date: 2026-08-30
 Repository: `vijaybkhot/urban-digital-twin-interoperability`
 
 Repository name at the time of this audit: `vijaybkhot/agentic-cesium-digital-twin`
+(renamed to `vijaybkhot/urban-digital-twin-interoperability` the following day,
+2026-08-31, in commit `5957732`; addendum added 2026-09-09 during the
+September 2026 research handoff, see #100).
 
 Audited base commit: `b7e837f`
 
