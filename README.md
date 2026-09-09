@@ -149,6 +149,10 @@ not report current flooding, road passability, facility operation, structural
 vulnerability, or evacuation suitability. Missing or unavailable evidence
 remains `Unknown`.
 
+Each of this mode's seven layers — how it loads, styles, toggles, and what it
+means — is documented individually in
+[`docs/data/urban-resilience-layers.md`](docs/data/urban-resilience-layers.md).
+
 ### ArcGIS visualization-portability experiment
 
 The separate page at `/experiments/arcgis-urban-resilience/` tests whether
