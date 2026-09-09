@@ -416,7 +416,10 @@ services. Upstream services can change; regenerated output requires review.
 | Cesium ion and ArcGIS services | Optional visual context | Visual context is not project-derived scientific evidence and can be unavailable without credentials. |
 
 Detailed source, licensing, asset, and service attribution is centralized in
-[Third-Party Notices](THIRD_PARTY_NOTICES.md).
+[Third-Party Notices](THIRD_PARTY_NOTICES.md). A per-dataset reference —
+purpose, exact study-area bounds, generating script, feature counts, and
+known limitations for every committed and hand-authored data file in this
+repository — is in the [data and source register](docs/data/data-register.md).
 
 The urban property classification is a zone-based research classification:
 

@@ -74,6 +74,11 @@ Validators and GitHub Actions
 The viewers do not recompute FEMA classifications. CI reads committed local
 artifacts and does not call OSM, FEMA, USGS, Cesium ion, or ArcGIS services.
 
+For a per-dataset reference — exact study-area bounds, generating script,
+committed file, feature counts, and known limitations for every artifact this
+pipeline produces, plus the three hand-authored/vendored files outside it —
+see the [data and source register](data/data-register.md).
+
 ## Ports and adapters
 
 The application defines small external boundaries in `src/ports`:
