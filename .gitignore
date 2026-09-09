@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Local environment files may hold Cesium ion or ArcGIS credentials. Ignore every
+# .env variant explicitly rather than relying on the broad *.local glob above, and
+# keep only the placeholder example tracked (see .env.example and SECURITY.md).
+.env
+.env.*
+!.env.example
+
 # Local reconstruction sample outputs
 public/models/*.ply
 public/models/*.glb
