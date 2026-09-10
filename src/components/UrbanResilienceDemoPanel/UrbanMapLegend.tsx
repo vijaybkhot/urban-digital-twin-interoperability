@@ -115,6 +115,28 @@ export function UrbanMapLegend() {
             <small>Click the building to see the reading</small>
           </span>
         </li>
+        <li>
+          <span
+            className="urban-map-legend-symbol urban-map-legend-facility"
+            style={swatchStyle(urbanResilienceVisualColors.facilityPublicSafety)}
+            aria-hidden="true"
+          />
+          <span>
+            <strong>Public-safety facility</strong>
+            <small>OSM-derived fire station, police, or similar; absence elsewhere does not mean none exist</small>
+          </span>
+        </li>
+        <li>
+          <span
+            className="urban-map-legend-symbol urban-map-legend-facility"
+            style={swatchStyle(urbanResilienceVisualColors.facilityCommunity)}
+            aria-hidden="true"
+          />
+          <span>
+            <strong>Community facility</strong>
+            <small>OSM-derived town hall, school, or similar; absence elsewhere does not mean none exist</small>
+          </span>
+        </li>
       </ul>
     </section>
   );
