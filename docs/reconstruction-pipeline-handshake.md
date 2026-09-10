@@ -10,27 +10,27 @@ POC 3D now exercises this boundary with a browser-only
 GLB. It does not execute COLMAP or transfer files.
 
 POC 4A expands this into a more complete discussion contract for the real
-pipeline handoff. See `docs/poc-4a-reconstruction-handoff-contract.md`.
+pipeline handoff. See `docs/archive/poc/poc-4a-reconstruction-handoff-contract.md`.
 
 POC 4B records the current reconstruction pipeline details discussed with
 Ehsan, including JPG/JPEG input, GPS metadata importance, and PLY point cloud
-output. See `docs/poc-4b-ehsan-reconstruction-pipeline.md`.
+output. See `docs/archive/poc/poc-4b-ehsan-reconstruction-pipeline.md`.
 
 POC 4C adds PLY output awareness while keeping raw PLY rendering out of scope.
 PLY point-cloud output is treated as pipeline-native data that should be
 converted to GLB or 3D Tiles before Cesium rendering. See
-`docs/poc-4c-ply-output-awareness.md`.
+`docs/archive/poc/poc-4c-ply-output-awareness.md`.
 
 POC 4D adds a local Blender-based PLY-to-GLB conversion spike. It is a local
 tooling experiment only; it does not add backend upload, real COLMAP execution,
 raw PLY rendering, or 3D Tiles rendering. See
-`docs/poc-4d-ply-conversion-spike.md`.
+`docs/archive/poc/poc-4d-ply-conversion-spike.md`.
 
 POC 4H adds browser-only GPS/EXIF readiness checks to image intake. It reports
 GPS coverage and a simple image-GPS-to-site distance warning as advisory signals
 before reconstruction handoff, but does not upload images or run a real
 feasibility check. See
-`docs/poc-4h-image-gps-exif-readiness.md`.
+`docs/archive/poc/poc-4h-image-gps-exif-readiness.md`.
 
 ## Responsibilities
 
