@@ -144,8 +144,18 @@ function buildFeature(entity, rawRecord, cache) {
 
 async function main() {
   const [propertyGeoJson, facilityGeoJson, cache] = await Promise.all([
-    readJson(PROPERTY_FILE, "Unable to read the existing urban property GeoJSON."),
-    readJson(FACILITY_FILE, "Unable to read the existing facility GeoJSON."),
+    readJson(
+      PROPERTY_FILE,
+      "Unable to read the existing urban property GeoJSON. Run " +
+        "npm run fetch:urban-resilience-data && " +
+        "npm run build:urban-resilience-data first.",
+    ),
+    readJson(
+      FACILITY_FILE,
+      "Unable to read the existing facility GeoJSON. Run " +
+        "npm run fetch:urban-resilience-facility-data && " +
+        "npm run build:urban-resilience-facility-data first.",
+    ),
     readJson(
       CACHE_FILE,
       "Unable to read cached EPQS results. Run npm run fetch:urban-resilience-elevation-sample first.",
