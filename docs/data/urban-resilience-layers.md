@@ -21,7 +21,7 @@ prop (`src/app/AppShell.tsx`) → `CesiumScene` effect
 | --- | --- | --- | --- | --- | --- | --- |
 | 1. Buildings / Properties | Implemented, core | Yes | Always on | No | Yes | Rows 1–5 |
 | 2. FEMA Flood Hazard | Implemented, core | Yes | Always on | No | **No** | Row 6 |
-| 3. Response Routes & Staging Resources | Implemented, core | Yes | On | **Yes, but see known issue below** | No | Rows 7–8 |
+| 3. Response Routes & Staging Resources | Implemented, core | Yes | On | **Coupled to layer 6's toggle — see note below** | No | Rows 7–8 |
 | 4. Community/Public-Safety Facilities | Experimental | Yes | Off | Yes | Yes | **Missing — known issue** |
 | 5. Ground Elevation Sample | Experimental | **No — React only** | Always loaded | No | n/a | n/a |
 | 6. Experimental LA-1/FEMA Segments | Experimental | Yes | Off | Yes | Yes | Inline 3-row line legend only (not in the main legend) |
@@ -165,7 +165,7 @@ at their midpoint. Resources: blue point markers (`resource`, `#0ea5e9`),
 time in `AppShell.tsx` (not per-entity at render time, unlike the other
 layers).
 
-**Visibility control — ⚠️ known issue.** Route visibility (not
+**Visibility control.** Route visibility (not
 existence — the entities are always created) is controlled by
 `CesiumScene`'s `urbanResponseRoutesVisible` prop, wired in `AppShell.tsx` as:
 
@@ -175,13 +175,16 @@ urbanResponseRoutesVisible={
 }
 ```
 
-**This means enabling the experimental LA-1/FEMA layer (layer 6, below)
-silently hides the response routes**, with no in-app control to bring them
-back except disabling that experiment. This is a real, confirmed defect, not
-intended behavior — tracked and being fixed in Issue #116 (HO-19), which
-gives routes their own independent toggle in the planned layer registry.
-Staging-resource points are **not** affected by this — only route polylines
-are gated by `urbanResponseRoutesVisible`
+**Enabling the experimental LA-1/FEMA layer (layer 6, below) currently hides
+the response routes.** This is **intentional original design**, not a
+defect — the two layers were built as an either/or presentation of the same
+corridor: the purple route is a simple, hand-simplified illustrative path,
+while the experimental layer traces the real OpenStreetMap road geometry
+segment by segment. Issue #116 (HO-19) is not a bug fix; it gives routes
+their own independent toggle in the planned layer registry so the two layers
+can be shown together or separately, as a clarity improvement to this
+existing behavior. Staging-resource points are **not** affected either way —
+only route polylines are gated by `urbanResponseRoutesVisible`
 (`CesiumViewerAdapter.ts:444-448`, `setUrbanResponseRoutesVisible`).
 
 **Selectable.** No — neither routes nor resources carry an `entityType` tag
@@ -325,7 +328,9 @@ are road centerlines draped on terrain, like the flood-zone layer.
 **Styler.** `src/cesium/styleUrbanLa1FemaDataSource.ts`
 (`styleUrbanLa1FemaDataSource`). Three visual states by
 `intersects_mapped_flood_hazard`:
-- `true` → solid blue-gray line (`#52758f`), outlined dark slate
+- `true` → solid purple line (`urbanResilienceVisualColors.route`, `#8b5cf6`
+  — the same purple as the response route, chosen so a confirmed FEMA
+  overlap reads as a deliberate, prominent finding), outlined dark slate
 - `false` → solid slate line (`#64748b`), no dash
 - `null` (Unknown) → **dashed** slate-gray line (`#94a3b8`, 14 px dash)
 
@@ -338,16 +343,16 @@ Selected segments get a white outline and thicker width (7 px vs. 3–4 px).
 `urbanLa1FemaExperimentEnabled` state in `AppShell.tsx`, surfaced as the
 "Experimental layer: On/Off" button in
 `UrbanLa1FemaExperimentPanel.tsx`. Defaults to **off**. **Enabling this
-toggle currently also hides the response routes (layer 3) as an
-unintentional side effect** — see layer 3's known-issue note above and
-Issue #116 (HO-19).
+toggle currently also hides the response routes (layer 3), by original
+design** — see layer 3's note above. Issue #116 (HO-19) will give each layer
+its own independent toggle so they can be shown together.
 
 **Selectable.** Yes — `entityType: "urbanLa1FemaSegment"`, one of the 8
 `ViewerSelection` variants. Selecting a segment drives the 13-field
 inspector in `UrbanLa1FemaExperimentPanel.tsx`.
 
 **Legend.** **Not in the main `UrbanMapLegend`.** A separate, inline 3-row
-line-style legend (solid blue-gray / solid slate / dashed slate) is rendered
+line-style legend (solid purple / solid slate / dashed slate) is rendered
 directly inside `UrbanLa1FemaExperimentPanel.tsx` when the layer is enabled,
 distinct from the main map legend section.
 
