@@ -96,6 +96,7 @@ export class CesiumViewerAdapter implements ViewerAdapter {
   private readonly urbanFloodZoneEntities = new Map<string, Cesium.Entity>();
   private readonly urbanLa1FemaSegmentEntities = new Map<string, Cesium.Entity>();
   private readonly urbanFacilityEntities = new Map<string, Cesium.Entity>();
+  private urbanElevationSampledPropertyIds: ReadonlySet<string> = new Set();
   private readonly measurementPoints = new Map<string, MeasurementPointConfig>();
   private disasterLoadVersion = 0;
   private urbanLoadVersion = 0;
@@ -449,9 +450,8 @@ export class CesiumViewerAdapter implements ViewerAdapter {
   }
 
   setUrbanElevationSampledPropertyIds(propertyIds: ReadonlySet<string>): void {
-    this.urbanPropertyEntities.forEach((entity, propertyId) => {
-      applyUrbanElevationSampleMarker(entity, propertyIds.has(propertyId));
-    });
+    this.urbanElevationSampledPropertyIds = propertyIds;
+    this.applySelectionStyles();
   }
 
   updateMeasurementPoint(point: MeasurementPointConfig): void {
@@ -942,6 +942,10 @@ export class CesiumViewerAdapter implements ViewerAdapter {
       applyUrbanPropertyVisualState(
         entity,
         this.selectedEntityIds.urbanPropertyId === propertyId,
+      );
+      applyUrbanElevationSampleMarker(
+        entity,
+        this.urbanElevationSampledPropertyIds.has(propertyId),
       );
     });
 

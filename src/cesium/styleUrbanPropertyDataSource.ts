@@ -27,6 +27,18 @@ export const URBAN_ELEVATION_SAMPLE_MARKER_MIN_PIXEL_SIZE = 10;
 export const URBAN_ELEVATION_SAMPLE_MARKER_MAX_PIXEL_SIZE = 18;
 export const URBAN_ELEVATION_SAMPLE_MARKER_PULSE_PERIOD_SECONDS = 2.5;
 
+// pixelSize is a fixed screen-space size that does not shrink with camera
+// distance, so at the flood/overview camera ranges (see
+// URBAN_FLOOD_CAMERA_RANGE_M / URBAN_OVERALL_CAMERA_RANGE_M in
+// flyToUrbanResilienceScenarioTarget.ts) the dot reads as oversized relative
+// to the shrunken building footprint beneath it. scaleByDistance keeps it at
+// full size at property-level zoom (URBAN_PROPERTY_CAMERA_RANGE_M ~ 120 m)
+// and shrinks it once the camera pulls back past that.
+export const URBAN_ELEVATION_SAMPLE_MARKER_SCALE_NEAR_M = 300;
+export const URBAN_ELEVATION_SAMPLE_MARKER_SCALE_NEAR_VALUE = 1;
+export const URBAN_ELEVATION_SAMPLE_MARKER_SCALE_FAR_M = 6_000;
+export const URBAN_ELEVATION_SAMPLE_MARKER_SCALE_FAR_VALUE = 0.35;
+
 export const urbanElevationSampleMarkerColor = Cesium.Color.fromCssColorString(
   urbanResilienceVisualColors.elevationSampleMarker,
 );
@@ -249,5 +261,11 @@ export function applyUrbanElevationSampleMarker(
     outlineColor: Cesium.Color.WHITE,
     outlineWidth: 2,
     disableDepthTestDistance: Number.POSITIVE_INFINITY,
+    scaleByDistance: new Cesium.NearFarScalar(
+      URBAN_ELEVATION_SAMPLE_MARKER_SCALE_NEAR_M,
+      URBAN_ELEVATION_SAMPLE_MARKER_SCALE_NEAR_VALUE,
+      URBAN_ELEVATION_SAMPLE_MARKER_SCALE_FAR_M,
+      URBAN_ELEVATION_SAMPLE_MARKER_SCALE_FAR_VALUE,
+    ),
   });
 }
