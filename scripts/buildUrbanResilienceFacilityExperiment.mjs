@@ -172,54 +172,86 @@ function addressLabel(tags) {
   return parts.length > 0 ? parts.join(" ") : "Not mapped in OSM";
 }
 
+function elementDescription(element) {
+  const amenity = typeof element?.tags?.amenity === "string" ? element.tags.amenity : "(no amenity tag)";
+  return `${element?.type ?? "unknown"}/${element?.id ?? "unknown"} (amenity=${amenity})`;
+}
+
+// Distinguishes two different reasons a queried OSM element can't become a
+// facility feature:
+//   - "skipped-unclassified": the element's amenity/emergency/healthcare tag
+//     is real and expected (the fetch script deliberately queries a broader
+//     set than the 4 this build classifies), but this build doesn't cover
+//     that category yet. Non-fatal, counted, and recorded in metadata --
+//     see HO-11.
+//   - "unsupported-geometry": the classification matched, but the element's
+//     geometry could not be turned into a valid Point/Polygon (e.g. a way
+//     with fewer than 3 usable coordinate pairs). This is a genuine
+//     data-quality problem, not an expected OSM-diversity issue, and stays
+//     fatal.
 function buildFacilityFeature(element, area, femaFeatures) {
   const classification = facilityClassification(element.tags);
+
+  if (!classification) {
+    return {
+      kind: "skipped-unclassified",
+      amenityType:
+        typeof element?.tags?.amenity === "string" ? element.tags.amenity : "(no amenity tag)",
+      description: elementDescription(element),
+    };
+  }
+
   const geometry = geometryFromElement(element);
 
-  if (!classification || !geometry) {
-    return null;
+  if (!geometry) {
+    return { kind: "unsupported-geometry", description: elementDescription(element) };
   }
 
   const relationship = evaluateFemaRelationship(geometry, area, femaFeatures);
   const facilityId = `osm-${element.type}-${element.id}`;
 
   return {
-    type: "Feature",
-    properties: {
-      facility_id: facilityId,
-      feature_kind: "community-public-safety-facility",
-      facility_category: classification.category,
-      facility_type: element.tags.amenity,
-      facility_type_label: classification.label,
-      name:
-        element.tags.name ??
-        element.tags.protection_title ??
-        `${classification.label} (${facilityId})`,
-      address_label: addressLabel(element.tags),
-      osm_element_type: element.type,
-      osm_id: element.id,
-      osm_classification_key: "amenity",
-      osm_classification_value: element.tags.amenity,
-      osm_tags_json: JSON.stringify(element.tags),
-      study_area: area.name,
-      fema_coverage_status: relationship.coverageStatus,
-      intersects_mapped_flood_hazard: relationship.intersectsMappedHazard,
-      fema_zones: relationship.zones,
-      fema_relationship_reason: relationship.reason,
-      interpretation: relationship.interpretation,
-      osm_source: OSM_SOURCE,
-      fema_source: FEMA_SOURCE,
-      processing_method:
-        `${geometry.type} facility geometry tested against FEMA NFHL ` +
-        "Polygon/MultiPolygon geometry; no operational, safety, or availability analysis.",
+    kind: "built",
+    feature: {
+      type: "Feature",
+      properties: {
+        facility_id: facilityId,
+        feature_kind: "community-public-safety-facility",
+        facility_category: classification.category,
+        facility_type: element.tags.amenity,
+        facility_type_label: classification.label,
+        name:
+          element.tags.name ??
+          element.tags.protection_title ??
+          `${classification.label} (${facilityId})`,
+        address_label: addressLabel(element.tags),
+        osm_element_type: element.type,
+        osm_id: element.id,
+        osm_classification_key: "amenity",
+        osm_classification_value: element.tags.amenity,
+        osm_tags_json: JSON.stringify(element.tags),
+        study_area: area.name,
+        fema_coverage_status: relationship.coverageStatus,
+        intersects_mapped_flood_hazard: relationship.intersectsMappedHazard,
+        fema_zones: relationship.zones,
+        fema_relationship_reason: relationship.reason,
+        interpretation: relationship.interpretation,
+        osm_source: OSM_SOURCE,
+        fema_source: FEMA_SOURCE,
+        processing_method:
+          `${geometry.type} facility geometry tested against FEMA NFHL ` +
+          "Polygon/MultiPolygon geometry; no operational, safety, or availability analysis.",
+      },
+      geometry,
     },
-    geometry,
   };
 }
 
 async function main() {
   const areaResults = [];
   const features = [];
+  let totalSkippedUnclassifiedCount = 0;
+  const allSkippedTypes = new Set();
 
   for (const area of STUDY_AREAS) {
     const [osmResponse, femaResponse] = await Promise.all([
@@ -228,16 +260,34 @@ async function main() {
     ]);
     const elements = Array.isArray(osmResponse.elements) ? osmResponse.elements : [];
     const femaFeatures = Array.isArray(femaResponse.features) ? femaResponse.features : [];
-    const areaFeatures = elements
-      .map((element) => buildFacilityFeature(element, area, femaFeatures))
-      .filter(Boolean);
-    const unsupportedElements = elements.length - areaFeatures.length;
+    const results = elements.map((element) => buildFacilityFeature(element, area, femaFeatures));
 
-    if (unsupportedElements > 0) {
+    const areaFeatures = results
+      .filter((result) => result.kind === "built")
+      .map((result) => result.feature);
+    const skippedUnclassified = results.filter((result) => result.kind === "skipped-unclassified");
+    const unsupportedGeometry = results.filter((result) => result.kind === "unsupported-geometry");
+
+    // Unsupported geometry remains fatal -- it is a genuine data-quality
+    // problem, not the expected OSM-diversity issue below.
+    if (unsupportedGeometry.length > 0) {
       throw new Error(
-        `${area.name}: ${unsupportedElements} queried OSM elements had unsupported geometry or classification.`,
+        `${area.name}: ${unsupportedGeometry.length} queried OSM element(s) had unsupported or ` +
+          `malformed geometry (${unsupportedGeometry.map((result) => result.description).join(", ")}). ` +
+          "This must be reviewed manually; it is not resolved by classifying a new amenity type.",
       );
     }
+
+    // An unclassified amenity type is expected -- the fetch script
+    // deliberately queries a broader set (~10 types) than the 4 this build
+    // classifies. Skip non-fatally, but never silently: count it, record
+    // which types were skipped, and print a summary. See HO-11 (#108).
+    const skippedTypesForArea = [
+      ...new Set(skippedUnclassified.map((result) => result.amenityType)),
+    ].sort();
+
+    skippedTypesForArea.forEach((type) => allSkippedTypes.add(type));
+    totalSkippedUnclassifiedCount += skippedUnclassified.length;
 
     features.push(...areaFeatures);
     areaResults.push({
@@ -246,7 +296,16 @@ async function main() {
       osmResultCount: elements.length,
       generatedFeatureCount: areaFeatures.length,
       femaFeatureCount: femaFeatures.length,
+      skippedUnclassifiedCount: skippedUnclassified.length,
+      skippedTypes: skippedTypesForArea,
     });
+
+    if (skippedUnclassified.length > 0) {
+      console.log(
+        `  ${area.name}: skipped ${skippedUnclassified.length} unclassified OSM element(s) ` +
+          `(types: ${skippedTypesForArea.join(", ")})`,
+      );
+    }
   }
 
   const output = {
@@ -254,6 +313,8 @@ async function main() {
     name: "Community/public-safety facilities with conservative FEMA relationships",
     metadata: {
       areaResults,
+      skippedUnclassifiedCount: totalSkippedUnclassifiedCount,
+      skippedTypes: [...allSkippedTypes].sort(),
       limitation:
         "Port Fourchon returned no matching OSM facility records. Absence from " +
         "OpenStreetMap does not prove that facilities are absent.",
@@ -270,6 +331,13 @@ async function main() {
   areaResults.forEach((result) =>
     console.log(`  ${result.name}: ${result.generatedFeatureCount} facilities`),
   );
+
+  if (totalSkippedUnclassifiedCount > 0) {
+    console.log(
+      `Skipped ${totalSkippedUnclassifiedCount} unclassified OSM element(s) total ` +
+        `(types: ${[...allSkippedTypes].sort().join(", ")}).`,
+    );
+  }
 }
 
 main().catch((error) => {

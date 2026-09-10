@@ -125,6 +125,20 @@ async function main() {
   assert.equal(portFourchonResult?.generatedFeatureCount, 0);
   assert.equal(portFourchonResult?.femaFeatureCount, 0);
 
+  // HO-11 (#108): skippedUnclassifiedCount/skippedTypes are new fields.
+  // Default to "no skips" (?? 0 / ?? []) rather than requiring them present,
+  // since the currently committed artifact predates this change and was not
+  // regenerated to add them -- both "field absent" and "field present as
+  // zero" mean the same thing here, and both must validate as zero because
+  // the 4 known Grand Isle records and 0 Port Fourchon records are exactly
+  // what this dataset has always contained; nothing was actually skipped.
+  assert.equal(grandIsleResult?.skippedUnclassifiedCount ?? 0, 0);
+  assert.deepEqual(grandIsleResult?.skippedTypes ?? [], []);
+  assert.equal(portFourchonResult?.skippedUnclassifiedCount ?? 0, 0);
+  assert.deepEqual(portFourchonResult?.skippedTypes ?? [], []);
+  assert.equal(geoJson.metadata.skippedUnclassifiedCount ?? 0, 0);
+  assert.deepEqual(geoJson.metadata.skippedTypes ?? [], []);
+
   const seenIds = new Set();
 
   for (const feature of geoJson.features) {

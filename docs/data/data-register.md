@@ -414,11 +414,18 @@ OpenStreetMap does not prove that facilities are absent."* The validator's
 `PROHIBITED_FIELDS` blocks `operational_status`, `availability`,
 `vulnerability_score`, `criticality_score`, `safety_status`.
 
-**Known issue.** The fetch queries far more tag values than the build
-classifies. Any new OSM element inside either bbox that matches a queried-but-
-unclassified tag (e.g. `amenity=fuel`) will make the next regeneration throw
-`"<area>: N queried OSM elements had unsupported geometry or classification."`
-Tracked as Issue #108 (HO-11).
+**Resolved (Issue #108, HO-11).** The fetch queries far more tag values than
+the build classifies. A new OSM element inside either bbox with an
+unclassified but expected tag (e.g. `amenity=fuel`) is now **skipped, not
+fatal** — recorded as `skippedUnclassifiedCount` and `skippedTypes` in the
+output metadata (both per-area and aggregate) and printed to the console, so
+coverage stays auditable rather than silently understated. Genuinely
+unsupported or malformed geometry (e.g. a way with too few coordinates)
+remains fatal, since that is a real data-quality problem, not expected
+OSM-diversity. Both behaviors were verified against a scratch fixture — an
+unclassified `fuel` node skipped cleanly with the correct metadata, and a
+classified element with empty geometry still threw with a clear message
+naming the specific element — never against the real committed data.
 
 **Status.** Generated, committed.
 
@@ -671,8 +678,9 @@ active work.
 - **Circular / sequential regeneration dependency** between datasets #1, #5,
   and #6, and the pinned-identity risk in dataset #6 if #1 or #5 is
   regenerated. Full graph and migration procedure: Issue #107 (HO-10).
-- **The facility build's fetch/classify mismatch** (dataset #5) — tracked in
-  Issue #108 (HO-11).
+- **The facility build's fetch/classify mismatch** (dataset #5) — resolved in
+  Issue #108 (HO-11): unclassified amenity types are now skipped and counted,
+  not fatal.
 - **No machine-readable checksum manifest yet exists** for any dataset in
   this register. That is tracked separately as Issue #87 (BONUS-008) and is
   out of scope here.

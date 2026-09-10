@@ -272,8 +272,9 @@ consolidation above.
 Fourchon returned zero matching OSM records — the panel and the committed
 metadata both state this does not prove facilities are absent there. See the
 [data register](data-register.md#5-experimental-communitypublic-safety-facilities)
-for the full facility list and the fetch/classify tag-mismatch known issue
-(Issue #108, HO-11).
+for the full facility list and how the fetch/classify tag mismatch is now
+handled (Issue #108, HO-11: unclassified types are skipped and counted, not
+fatal).
 
 ---
 
