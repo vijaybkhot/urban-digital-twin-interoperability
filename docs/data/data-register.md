@@ -357,9 +357,12 @@ FEMA-relationship classification.
   the west edge is `-90.005`, wider than dataset #1's building-fetch window
   of `-89.99`.** This divergence is deliberate (the comment says it "extends
   only its western edge so it includes mapped municipal-service facilities")
-  but is one of three inconsistent Grand Isle extents in this codebase — see
-  [`docs/data/regeneration.md`](regeneration.md) (#107) and Issue #109
-  (HO-12) for the full consolidation plan.
+  and is one of several distinct Grand Isle research windows in this
+  codebase, now consolidated into one file, `scripts/lib/studyAreas.mjs`
+  (Issue #109 / HO-12), which every fetch/build/validate script imports from
+  rather than hardcoding its own literal. See
+  [`docs/data/regeneration.md`](regeneration.md) (#107) for the pipeline
+  context.
 - Port Fourchon: `[29.09, -90.22, 29.17, -90.14]` (same as dataset #1).
 
 **Authoritative organizations.** OpenStreetMap (facility tags/geometry) +

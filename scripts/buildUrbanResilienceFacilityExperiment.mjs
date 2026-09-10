@@ -4,6 +4,7 @@ import {
   pointIntersectsGeometry,
   polygonIntersectsGeometry,
 } from "./lib/linePolygonIntersection.mjs";
+import { grandIsleFacilityBbox, portFourchonBbox } from "./lib/studyAreas.mjs";
 
 const CACHE_DIR = new URL(".cache/urban-resilience/", import.meta.url);
 const OUTPUT_FILE = new URL(
@@ -15,12 +16,12 @@ const STUDY_AREAS = [
   {
     id: "grand-isle",
     name: "Grand Isle facility query window",
-    bbox: [29.225, -90.005, 29.245, -89.955],
+    bbox: grandIsleFacilityBbox,
   },
   {
     id: "port-fourchon",
     name: "Port Fourchon facility query window",
-    bbox: [29.09, -90.22, 29.17, -90.14],
+    bbox: portFourchonBbox,
   },
 ];
 
