@@ -306,7 +306,9 @@
 }
 
 .urban-la1-line-intersection {
-  border-color: #52758f;
+  /* border-color is set inline in UrbanLa1FemaExperimentPanel.tsx from
+     urbanResilienceVisualColors.route, the single source of truth shared
+     with the Cesium styler -- do not hardcode a color here. */
 }
 
 .urban-la1-line-unknown {

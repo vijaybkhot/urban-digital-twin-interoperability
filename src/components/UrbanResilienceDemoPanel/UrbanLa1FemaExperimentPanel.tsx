@@ -1,3 +1,4 @@
+import { urbanResilienceVisualColors } from "../../theme/urbanResilienceVisualTokens";
 import type { SelectedUrbanLa1FemaSegment } from "../../types/urbanResilience";
 
 interface UrbanLa1FemaExperimentPanelProps {
@@ -56,8 +57,12 @@ export function UrbanLa1FemaExperimentPanel({
       {enabled && (
         <div className="urban-la1-experiment-legend" aria-label="Experimental LA-1 legend">
           <p>
-            <span className="urban-la1-line urban-la1-line-intersection" aria-hidden="true" />
-            <strong>Solid blue-gray:</strong> mapped FEMA intersection found
+            <span
+              className="urban-la1-line urban-la1-line-intersection"
+              style={{ borderColor: urbanResilienceVisualColors.route }}
+              aria-hidden="true"
+            />
+            <strong>Solid purple:</strong> mapped FEMA intersection found
           </p>
           <p>
             <span className="urban-la1-line urban-la1-line-unknown" aria-hidden="true" />
