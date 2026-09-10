@@ -37,6 +37,7 @@ import {
   styleDisasterPropertyDataSource,
 } from "../../cesium/styleDisasterPropertyDataSource";
 import {
+  applyUrbanElevationSampleMarker,
   applyUrbanPropertyVisualState,
   styleUrbanPropertyDataSource,
 } from "../../cesium/styleUrbanPropertyDataSource";
@@ -444,6 +445,12 @@ export class CesiumViewerAdapter implements ViewerAdapter {
   setUrbanResponseRoutesVisible(visible: boolean): void {
     this.urbanResponseRouteEntities.forEach((entity) => {
       entity.show = visible;
+    });
+  }
+
+  setUrbanElevationSampledPropertyIds(propertyIds: ReadonlySet<string>): void {
+    this.urbanPropertyEntities.forEach((entity, propertyId) => {
+      applyUrbanElevationSampleMarker(entity, propertyIds.has(propertyId));
     });
   }
 

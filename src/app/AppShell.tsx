@@ -18,6 +18,7 @@ import { createModularHousingViewerConfig } from "../domain/modularHousing/creat
 import { mockModularHousingScenario } from "../domain/modularHousing/mockModularHousingScenario";
 import { createUrbanResilienceViewerConfig } from "../domain/urbanResilience/createUrbanResilienceViewerConfig";
 import { grandIslePortFourchonScenario } from "../domain/urbanResilience/grandIslePortFourchonScenario";
+import { loadUrbanGroundElevationSample } from "../domain/urbanResilience/loadUrbanGroundElevationSample";
 import { parseUrbanResponseContext } from "../domain/urbanResilience/parseUrbanResponseContext";
 import { UrbanResilienceDemoPanel } from "../components/UrbanResilienceDemoPanel/UrbanResilienceDemoPanel";
 import type {
@@ -44,6 +45,10 @@ type ApplicationMode =
   | "modular-demo"
   | "disaster-demo"
   | "urban-resilience-demo";
+
+// Stable empty-set default so a not-yet-loaded (or failed) elevation-sample
+// fetch does not create a new Set identity on every render.
+const EMPTY_URBAN_PROPERTY_ID_SET: ReadonlySet<string> = new Set();
 
 interface DragState {
   active: boolean;
@@ -108,6 +113,8 @@ export function AppShell() {
   const [urbanScenario, setUrbanScenario] = useState(
     grandIslePortFourchonScenario,
   );
+  const [urbanElevationSampledPropertyIds, setUrbanElevationSampledPropertyIds] =
+    useState<ReadonlySet<string>>(EMPTY_URBAN_PROPERTY_ID_SET);
   const [modularFocusRequest, setModularFocusRequest] = useState<{
     target: ModularCameraTarget;
     version: number;
@@ -337,6 +344,7 @@ export function AppShell() {
     setModularFocusRequest(null);
     setDisasterFocusRequest(null);
     setDisasterScenario(mockDisasterResilienceScenario);
+    setUrbanElevationSampledPropertyIds(EMPTY_URBAN_PROPERTY_ID_SET);
 
     let resolvedScenario = grandIslePortFourchonScenario;
 
@@ -356,6 +364,41 @@ export function AppShell() {
       }
 
       console.warn("Unable to load urban resilience response context.", loadError);
+    }
+
+    // Independent, best-effort lookup driving the "which buildings have a
+    // ground-elevation sample" map marker (see HO-28 / docs/data/urban-
+    // resilience-layers.md, layer 1). Derived from the committed sample
+    // GeoJSON itself, not the Node-only pinned manifest, so the marker can
+    // never drift from what is actually published. A failure here must
+    // never block the primary scenario render -- it only means no markers.
+    try {
+      const sampleRecords = await loadUrbanGroundElevationSample(
+        grandIslePortFourchonScenario.experimentalGroundElevationDataUrl,
+      );
+
+      if (navigationVersion !== navigationVersionRef.current) {
+        return;
+      }
+
+      const sampledPropertyIds = new Set<string>();
+
+      sampleRecords.forEach((record) => {
+        if (record.entity_kind === "building" && record.property_id) {
+          sampledPropertyIds.add(record.property_id);
+        }
+      });
+
+      setUrbanElevationSampledPropertyIds(sampledPropertyIds);
+    } catch (loadError) {
+      if (navigationVersion !== navigationVersionRef.current) {
+        return;
+      }
+
+      console.warn(
+        "Unable to load ground-elevation sample IDs for map markers.",
+        loadError,
+      );
     }
 
     setUrbanScenario(resolvedScenario);
@@ -501,6 +544,11 @@ export function AppShell() {
           }
           urbanResponseRoutesVisible={
             mode !== "urban-resilience-demo" || !urbanLa1FemaExperimentEnabled
+          }
+          urbanElevationSampledPropertyIds={
+            mode === "urban-resilience-demo"
+              ? urbanElevationSampledPropertyIds
+              : EMPTY_URBAN_PROPERTY_ID_SET
           }
           modularFocusTarget={
             mode === "modular-demo" ? modularFocusRequest?.target ?? null : null
