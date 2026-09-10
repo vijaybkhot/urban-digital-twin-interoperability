@@ -24,6 +24,11 @@ emergency feed, authentication, database, or persisted project state. Mock,
 experimental, external, and planned capabilities are identified explicitly
 throughout this document.
 
+**New to this repository?** Start with the
+[developer onboarding guide](docs/handoff/onboarding.md) — a 15-minute path
+from clone to running application, a classification of every mode, and a
+reading order into the rest of this documentation.
+
 ## Live research demo
 
 **Demo:** https://urban-digital-twin-interoperability.vercel.app/

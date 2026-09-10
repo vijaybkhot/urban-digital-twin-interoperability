@@ -22,6 +22,10 @@ experimental, external, and planned capabilities clearly distinguishable.
 Do not place security vulnerabilities, credentials, private data, or
 restricted research material in a public issue. Follow `SECURITY.md` instead.
 
+New to this repository? The [developer onboarding guide](docs/handoff/onboarding.md)
+covers the 15-minute setup path, a classification of every application mode,
+the one architectural rule that matters most, and where to read next.
+
 ## Development setup
 
 Requirements:
