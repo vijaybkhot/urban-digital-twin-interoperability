@@ -1,13 +1,18 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import {
+  grandIsleBaseBbox,
+  la1CorridorBbox,
+  portFourchonBbox,
+} from "./lib/studyAreas.mjs";
 
 // Grand Isle, LA (barrier-island town) and Port Fourchon, LA (port facility
 // area), connected by LA Highway 1 -- the sole road connecting both to the
 // mainland. Bounding boxes are [south, west, north, east] in decimal degrees.
-const GRAND_ISLE_BBOX = [29.225, -89.99, 29.245, -89.955];
-const PORT_FOURCHON_BBOX = [29.09, -90.22, 29.17, -90.14];
+const GRAND_ISLE_BBOX = grandIsleBaseBbox;
+const PORT_FOURCHON_BBOX = portFourchonBbox;
 // Extends north past Golden Meadow, Galliano, and Larose so the LA-1
 // evacuation corridor route has real road geometry to snap to.
-const CORRIDOR_BBOX = [29.05, -90.4, 29.6, -89.95];
+const CORRIDOR_BBOX = la1CorridorBbox;
 
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 const FEMA_NFHL_FLOOD_ZONES_URL =

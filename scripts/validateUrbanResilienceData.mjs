@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { urbanResilienceRegionBounds } from "./lib/studyAreas.mjs";
 
 const DATA_DIR = "public/data/urban-resilience";
-const REGION_BOUNDS = { minLat: 29.0, maxLat: 29.65, minLon: -90.45, maxLon: -89.9 };
+const REGION_BOUNDS = urbanResilienceRegionBounds;
 const VALID_ZONE_CODES = new Set(["V", "VE", "A", "AE", "AH", "AO", "AR", "A99", "D", "X", "Unmapped"]);
 const VALID_RISK_LEVELS = new Set(["Low", "Moderate", "High", "Unknown"]);
 

@@ -1,4 +1,5 @@
 import { mkdir, writeFile } from "node:fs/promises";
+import { grandIsleFacilityBbox, portFourchonBbox } from "./lib/studyAreas.mjs";
 
 // Facility-specific research windows. The Grand Isle window extends only its
 // western edge so it includes mapped municipal-service facilities. Existing
@@ -7,12 +8,12 @@ const FACILITY_STUDY_AREAS = [
   {
     id: "grand-isle",
     label: "Grand Isle facility query window",
-    bbox: [29.225, -90.005, 29.245, -89.955],
+    bbox: grandIsleFacilityBbox,
   },
   {
     id: "port-fourchon",
     label: "Port Fourchon facility query window",
-    bbox: [29.09, -90.22, 29.17, -90.14],
+    bbox: portFourchonBbox,
   },
 ];
 

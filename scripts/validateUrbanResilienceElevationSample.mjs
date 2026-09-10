@@ -6,6 +6,7 @@ import {
   EXPECTED_GRAND_ISLE_FACILITIES,
   SAMPLED_GRAND_ISLE_BUILDINGS,
 } from "./lib/urbanElevationSample.mjs";
+import { grandIsleElevationValidationWindow } from "./lib/studyAreas.mjs";
 
 const PROPERTY_FILE = new URL(
   "../public/data/urban-resilience/grand_isle_port_fourchon_properties.geojson",
@@ -84,12 +85,13 @@ async function main() {
       properties.query_latitude,
     ]);
     assert.ok(
-      properties.query_longitude >= -90.005 &&
-        properties.query_longitude <= -89.95,
+      properties.query_longitude >= grandIsleElevationValidationWindow.minLon &&
+        properties.query_longitude <= grandIsleElevationValidationWindow.maxLon,
       `${properties.entity_key}: invalid Grand Isle longitude`,
     );
     assert.ok(
-      properties.query_latitude >= 29.22 && properties.query_latitude <= 29.25,
+      properties.query_latitude >= grandIsleElevationValidationWindow.minLat &&
+        properties.query_latitude <= grandIsleElevationValidationWindow.maxLat,
       `${properties.entity_key}: invalid Grand Isle latitude`,
     );
     assert.ok(
