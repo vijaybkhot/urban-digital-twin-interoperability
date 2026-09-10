@@ -77,7 +77,10 @@ artifacts and does not call OSM, FEMA, USGS, Cesium ion, or ArcGIS services.
 For a per-dataset reference — exact study-area bounds, generating script,
 committed file, feature counts, and known limitations for every artifact this
 pipeline produces, plus the three hand-authored/vendored files outside it —
-see the [data and source register](data/data-register.md).
+see the [data and source register](data/data-register.md). For how each
+resulting layer actually renders — adapter methods, Cesium stylers,
+visibility toggles, and legend entries — see
+[`docs/data/urban-resilience-layers.md`](data/urban-resilience-layers.md).
 
 ## Ports and adapters
 
