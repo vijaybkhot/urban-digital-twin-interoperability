@@ -72,7 +72,7 @@ After Ehsan shares a sample PLY, run a focused conversion spike:
 - PLY to 3D Tiles for larger point clouds or geospatial scenes.
 
 POC 4D starts this path with a local Blender-based PLY-to-GLB conversion script
-and testing notes. See `docs/poc-4d-ply-conversion-spike.md`.
+and testing notes. See `docs/archive/poc/poc-4d-ply-conversion-spike.md`.
 
 The better long-term path should be chosen after testing with real pipeline
 output.
