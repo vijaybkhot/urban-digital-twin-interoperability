@@ -373,6 +373,16 @@ build failure still fails the workflow.
 The browser consumes committed artifacts under `public/data/urban-resilience/`.
 Acquisition, artifact generation, and validation remain separate commands.
 
+**These four pipelines are not independent — run them in the order shown
+below.** The LA-1/FEMA experiment reuses the base dataset's fetch cache (it
+has no `fetch:` command of its own), and the ground-elevation sample reads
+the *committed output* of both the base dataset and the facility experiment
+to know which points to query. See
+[`docs/data/regeneration.md`](docs/data/regeneration.md) for the full
+dependency graph, what happens if you run them out of order, and the
+migration procedure required if OpenStreetMap identity drifts between
+fetches.
+
 ### Base urban dataset
 
 ```bash
