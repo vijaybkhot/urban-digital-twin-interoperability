@@ -23,7 +23,9 @@ export const unknownUrbanRiskColor = Cesium.Color.fromCssColorString(
   urbanResilienceVisualColors.riskUnknown,
 );
 
-export const URBAN_ELEVATION_SAMPLE_MARKER_PIXEL_SIZE = 10;
+export const URBAN_ELEVATION_SAMPLE_MARKER_MIN_PIXEL_SIZE = 10;
+export const URBAN_ELEVATION_SAMPLE_MARKER_MAX_PIXEL_SIZE = 18;
+export const URBAN_ELEVATION_SAMPLE_MARKER_PULSE_PERIOD_SECONDS = 2.5;
 
 export const urbanElevationSampleMarkerColor = Cesium.Color.fromCssColorString(
   urbanResilienceVisualColors.elevationSampleMarker,
@@ -220,8 +222,29 @@ export function applyUrbanElevationSampleMarker(
     return;
   }
 
+  // A fixed-size dot was hard to notice while panning among hundreds of
+  // buildings (see #133/HO-28 follow-up). Pulsing the size gently between
+  // min/max draws the eye without needing to be large at rest, and costs
+  // nothing when the layer isn't being rendered -- CallbackProperty only
+  // evaluates while Cesium is actually drawing this entity.
+  const pulseAmplitude =
+    (URBAN_ELEVATION_SAMPLE_MARKER_MAX_PIXEL_SIZE -
+      URBAN_ELEVATION_SAMPLE_MARKER_MIN_PIXEL_SIZE) /
+    2;
+  const pulseMidpoint =
+    (URBAN_ELEVATION_SAMPLE_MARKER_MAX_PIXEL_SIZE +
+      URBAN_ELEVATION_SAMPLE_MARKER_MIN_PIXEL_SIZE) /
+    2;
+
   entity.point = new Cesium.PointGraphics({
-    pixelSize: URBAN_ELEVATION_SAMPLE_MARKER_PIXEL_SIZE,
+    pixelSize: new Cesium.CallbackProperty((time) => {
+      const secondsOfDay = time?.secondsOfDay ?? 0;
+      const phase =
+        (secondsOfDay % URBAN_ELEVATION_SAMPLE_MARKER_PULSE_PERIOD_SECONDS) /
+        URBAN_ELEVATION_SAMPLE_MARKER_PULSE_PERIOD_SECONDS;
+
+      return pulseMidpoint + pulseAmplitude * Math.sin(phase * 2 * Math.PI);
+    }, false),
     color: urbanElevationSampleMarkerColor,
     outlineColor: Cesium.Color.WHITE,
     outlineWidth: 2,
