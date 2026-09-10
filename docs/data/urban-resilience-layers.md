@@ -60,7 +60,11 @@ signal for which of the 778 buildings have a USGS ground-elevation sample
 point marker (`elevationSampleMarker`, `#3b82f6`, white outline —
 `applyUrbanElevationSampleMarker` in the same file) is layered onto the
 *same entity*, at its existing roof position, for exactly the buildings
-present in the committed ground-elevation sample GeoJSON. The set of
+present in the committed ground-elevation sample GeoJSON. The marker's pixel
+size **pulses gently** (10–18 px over a 2.5-second cycle, via a
+`Cesium.CallbackProperty`) — a fixed-size dot proved hard to notice while
+panning among hundreds of buildings, so this is a deliberate, low-cost
+discoverability aid rather than a static indicator. The set of
 sampled `property_id`s is derived in `AppShell.tsx` from that GeoJSON
 itself (a second, independent fetch of the already-public file, not the
 Node-only pinned manifest in `scripts/lib/urbanElevationSample.mjs`), then
