@@ -1,8 +1,15 @@
 import * as Cesium from "cesium";
 import { parseUrbanLa1FemaSegmentAttributes } from "../domain/urbanResilience/parseUrbanLa1FemaSegment";
+import { urbanResilienceVisualColors } from "../theme/urbanResilienceVisualTokens";
 import type { UrbanLa1FemaSegmentAttributes } from "../types/urbanResilience";
 
-export const URBAN_LA1_INTERSECTION_COLOR = Cesium.Color.fromCssColorString("#52758f");
+// Reuses the response-route purple so a confirmed FEMA overlap reads as a
+// deliberate, prominent research finding rather than blending into the
+// basemap alongside the two calmer, muted "no overlap" / "not yet evaluated"
+// states below.
+export const URBAN_LA1_INTERSECTION_COLOR = Cesium.Color.fromCssColorString(
+  urbanResilienceVisualColors.route,
+);
 export const URBAN_LA1_UNKNOWN_COLOR = Cesium.Color.fromCssColorString("#94a3b8");
 export const URBAN_LA1_NO_INTERSECTION_COLOR =
   Cesium.Color.fromCssColorString("#64748b");
