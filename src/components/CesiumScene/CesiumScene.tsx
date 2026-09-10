@@ -18,6 +18,11 @@ import type {
 } from "../../types/urbanResilience";
 import type { ProjectConfig } from "../../types/projectConfig";
 
+// Stable empty-set default so omitting urbanElevationSampledPropertyIds does
+// not create a new Set identity on every render (which would retrigger the
+// effect below unnecessarily).
+const EMPTY_PROPERTY_ID_SET: ReadonlySet<string> = new Set();
+
 interface CesiumSceneProps {
   config: ProjectConfig;
   onEntitySelected: (selection: ViewerSelection) => void;
@@ -35,6 +40,7 @@ interface CesiumSceneProps {
   urbanLa1FemaExperimentDataUrl?: string | null;
   urbanFacilityExperimentDataUrl?: string | null;
   urbanResponseRoutesVisible?: boolean;
+  urbanElevationSampledPropertyIds?: ReadonlySet<string> | null;
   modularFocusTarget?: ModularCameraTarget | null;
   modularFocusVersion?: number;
   disasterFocusTarget?: DisasterCameraTarget | null;
@@ -74,6 +80,7 @@ export function CesiumScene({
   urbanLa1FemaExperimentDataUrl = null,
   urbanFacilityExperimentDataUrl = null,
   urbanResponseRoutesVisible = true,
+  urbanElevationSampledPropertyIds = EMPTY_PROPERTY_ID_SET,
   modularFocusTarget = null,
   modularFocusVersion = 0,
   disasterFocusTarget = null,
@@ -178,6 +185,12 @@ export function CesiumScene({
       urbanResponseRoutesVisible,
     );
   }, [config.projectId, urbanResponseRoutesVisible, urbanScenario]);
+
+  useEffect(() => {
+    adapterRef.current?.setUrbanElevationSampledPropertyIds(
+      urbanElevationSampledPropertyIds ?? EMPTY_PROPERTY_ID_SET,
+    );
+  }, [config.projectId, urbanElevationSampledPropertyIds, urbanScenario]);
 
   useEffect(() => {
     const adapter = adapterRef.current;

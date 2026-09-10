@@ -7,4 +7,5 @@ export const urbanResilienceVisualColors = {
   floodZoneOutline: "#e0f2fe",
   resource: "#0ea5e9",
   route: "#8b5cf6",
+  elevationSampleMarker: "#3b82f6",
 } as const;

@@ -19,7 +19,7 @@ prop (`src/app/AppShell.tsx`) → `CesiumScene` effect
 
 | Layer | Classification | Cesium layer? | Default visibility | Toggleable | Selectable | Legend |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1. Buildings / Properties | Implemented, core | Yes | Always on | No | Yes | Rows 1–5 |
+| 1. Buildings / Properties | Implemented, core | Yes | Always on | No | Yes | Rows 1–5, 9 |
 | 2. FEMA Flood Hazard | Implemented, core | Yes | Always on | No | **No** | Row 6 |
 | 3. Response Routes & Staging Resources | Implemented, core | Yes | On | **Coupled to layer 6's toggle — see note below** | No | Rows 7–8 |
 | 4. Community/Public-Safety Facilities | Experimental | Yes | Off | Yes | Yes | **Missing — known issue** |
@@ -54,6 +54,22 @@ extruded to `building_height_m` (or a `5` m fallback,
 above the roof (label suppressed beyond `250 m`,
 `URBAN_PROPERTY_LABEL_MAX_DISTANCE_M`).
 
+**Ground-elevation sample marker.** Since risk-tier coloring alone gives no
+signal for which of the 778 buildings have a USGS ground-elevation sample
+(nearly all Grand Isle buildings are already red/`High`), a small blue
+point marker (`elevationSampleMarker`, `#3b82f6`, white outline —
+`applyUrbanElevationSampleMarker` in the same file) is layered onto the
+*same entity*, at its existing roof position, for exactly the buildings
+present in the committed ground-elevation sample GeoJSON. The set of
+sampled `property_id`s is derived in `AppShell.tsx` from that GeoJSON
+itself (a second, independent fetch of the already-public file, not the
+Node-only pinned manifest in `scripts/lib/urbanElevationSample.mjs`), then
+passed through `CesiumScene`'s `urbanElevationSampledPropertyIds` prop to
+`ViewerAdapter.setUrbanElevationSampledPropertyIds`. This only marks
+buildings — the 4 sampled facilities are not marked, since they already
+have distinct colored point markers (see layer 4) and are a small,
+fully-visible set. See the legend (row 9) for the on-map explanation.
+
 **Domain parser.** `src/domain/urbanResilience/parseUrbanPropertyAttributes.ts`
 (`parseUrbanPropertyAttributes`), invoked by the adapter at pick time
 (`CesiumViewerAdapter.ts:1082`) to build the typed
@@ -67,8 +83,9 @@ whenever `urbanScenario` is non-null (i.e., whenever the mode is active).
 property drives `UrbanPropertyDashboard.tsx` and (if the sampled property is
 one of the 12 pinned buildings) the ground-elevation detail (layer 5).
 
-**Legend.** Rows 1–4 (Low/Moderate/High/Unknown risk tiers) plus row 5
-(selected-property outline) in `UrbanMapLegend.tsx`.
+**Legend.** Rows 1–4 (Low/Moderate/High/Unknown risk tiers), row 5
+(selected-property outline), and row 9 (ground-elevation sample marker) in
+`UrbanMapLegend.tsx`.
 
 **Interpretation limits.** `risk_level` is a documented zone-based proxy, not
 a computed hydraulic model or an official flood determination. See the [data
@@ -258,10 +275,15 @@ for the full facility list and the fetch/classify tag-mismatch known issue
 
 ## 5. Ground Elevation Sample (Experimental)
 
-**Classification: EXPERIMENTAL — and NOT a Cesium layer.** A small,
+**Classification: EXPERIMENTAL — and NOT a Cesium layer itself.** A small,
 fixed USGS 3DEP elevation sample (16 points: 12 buildings + 4 facilities),
-shown only as detail rows in the selected-property or selected-facility
-inspector — never as a rendered map layer.
+shown as detail rows in the selected-property or selected-facility
+inspector — the sample data itself is never rendered as its own map layer
+(no polygons or lines). Since a user has no way to tell which of the 778
+buildings have a sample without clicking every one, layer 1 (Buildings /
+Properties) marks the 12 sampled buildings directly on the map with a small
+blue marker, described there and in legend row 9 — the marker is part of
+layer 1's styling, not a separate rendered layer here.
 
 **Source artifact.** `scenario.experimentalGroundElevationDataUrl` =
 `/data/urban-resilience/experiments/grand_isle_ground_elevation_sample.geojson`.

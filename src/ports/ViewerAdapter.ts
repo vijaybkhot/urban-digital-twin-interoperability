@@ -66,6 +66,7 @@ export interface ViewerAdapter {
   renderUrbanLa1FemaExperiment(dataUrl: string | null): Promise<void>;
   renderUrbanFacilityExperiment(dataUrl: string | null): Promise<void>;
   setUrbanResponseRoutesVisible(visible: boolean): void;
+  setUrbanElevationSampledPropertyIds(propertyIds: ReadonlySet<string>): void;
   updateMeasurementPoint(point: MeasurementPointConfig): void;
   flyToProject(config: ProjectConfig): void;
   flyToModelAsset(assetId: string): void;

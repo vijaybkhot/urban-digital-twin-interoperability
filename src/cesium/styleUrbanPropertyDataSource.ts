@@ -23,6 +23,12 @@ export const unknownUrbanRiskColor = Cesium.Color.fromCssColorString(
   urbanResilienceVisualColors.riskUnknown,
 );
 
+export const URBAN_ELEVATION_SAMPLE_MARKER_PIXEL_SIZE = 10;
+
+export const urbanElevationSampleMarkerColor = Cesium.Color.fromCssColorString(
+  urbanResilienceVisualColors.elevationSampleMarker,
+);
+
 export interface UrbanPropertyVisualStyle {
   color: Cesium.Color;
   label: string;
@@ -197,4 +203,28 @@ export function styleUrbanPropertyDataSource(
   });
 
   return propertyEntities;
+}
+
+// Marks a building that has a USGS ground-elevation sample (see
+// docs/data/urban-resilience-layers.md, layer 1) by layering a small point
+// marker onto the building's *existing* entity, at the same roof position
+// stylePropertyEntity already computed for the address label. This does not
+// add a new entity, change risk-tier styling, or affect click-selection --
+// the polygon's entityType/urbanPropertyId metadata is untouched.
+export function applyUrbanElevationSampleMarker(
+  entity: Cesium.Entity,
+  isSampled: boolean,
+): void {
+  if (!isSampled) {
+    entity.point = undefined;
+    return;
+  }
+
+  entity.point = new Cesium.PointGraphics({
+    pixelSize: URBAN_ELEVATION_SAMPLE_MARKER_PIXEL_SIZE,
+    color: urbanElevationSampleMarkerColor,
+    outlineColor: Cesium.Color.WHITE,
+    outlineWidth: 2,
+    disableDepthTestDistance: Number.POSITIVE_INFINITY,
+  });
 }

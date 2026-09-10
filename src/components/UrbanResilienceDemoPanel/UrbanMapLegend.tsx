@@ -104,6 +104,17 @@ export function UrbanMapLegend() {
             <small>Real road geometry; status is a research judgment</small>
           </span>
         </li>
+        <li>
+          <span
+            className="urban-map-legend-symbol urban-map-legend-resource"
+            style={swatchStyle(urbanResilienceVisualColors.elevationSampleMarker)}
+            aria-hidden="true"
+          />
+          <span>
+            <strong>Ground-elevation sample available</strong>
+            <small>Click the building to see the reading</small>
+          </span>
+        </li>
       </ul>
     </section>
   );
