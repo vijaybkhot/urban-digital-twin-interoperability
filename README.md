@@ -475,17 +475,37 @@ src/
   app/            Application state and mode orchestration
   cesium/         Cesium-specific rendering and scene helpers
   components/     React panels and controls
+  config/         Runtime environment/config loading and validation (project_config.json, Cesium ion)
   domain/         Viewer-independent scenario and parsing logic
   experiments/    ArcGIS portability experiment source
   ports/          Interfaces for external providers and viewers
+  styles/         Global application CSS
+  theme/          Shared Cesium/legend color tokens per scenario
   types/          Shared TypeScript contracts
 
 scripts/          Acquisition, processing, geometry, and validation scripts
+  lib/            Shared geometry/representative-point helpers used by multiple scripts
+tools/            Non-Node local tooling (see "Non-Node tooling" below)
 public/data/      Committed generated JSON and GeoJSON consumed by viewers
 public/models/    Approved viewer-ready sample assets
+public/tilesets/  PLANNED — 3D Tiles support is not implemented; empty placeholder
 experiments/      Alternate experiment HTML entry points
 docs/             Architecture, decisions, contracts, evidence, and research notes
 ```
+
+### Non-Node tooling
+
+`tools/convert-ply-to-glb.py` converts a local PLY point cloud to GLB using
+Blender's Python API — it is not invoked by any npm script and is not part of
+the application build. Requires a local Blender install; no version is
+pinned. Invocation:
+
+```bash
+blender --background --factory-startup --python tools/convert-ply-to-glb.py -- input.ply output.glb
+```
+
+Output `.glb`/`.ply` files are gitignored (`public/models/*.glb`,
+`public/models/*.ply`), except the vendored `CesiumMilkTruck.glb` sample.
 
 ## Governance and open-source release
 
