@@ -27,7 +27,9 @@ throughout this document.
 **New to this repository?** Start with the
 [developer onboarding guide](docs/handoff/onboarding.md) — a 15-minute path
 from clone to running application, a classification of every mode, and a
-reading order into the rest of this documentation.
+reading order into the rest of this documentation. If something doesn't
+behave as documented, check the
+[troubleshooting guide](docs/handoff/troubleshooting.md) first.
 
 ## Live research demo
 
