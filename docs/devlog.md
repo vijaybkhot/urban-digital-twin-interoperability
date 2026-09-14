@@ -1,5 +1,25 @@
 # Devlog
 
+## 2026-09-14
+
+- Made `urban-resilience-demo` the application's default mode on first load
+  (#127, HO-25). The app previously opened in `workflow` mode — the mock
+  reconstruction demo — so a first-time visitor's initial impression was not
+  the Sea Grant deliverable. The default now runs the same load the "Open
+  urban resilience demo" button runs, so it arrives complete with its 2
+  response routes and 3 staging references rather than an empty response
+  context, and shows a brief loading state instead of flashing the previous
+  default mode.
+- Recentered the urban "Overall view" camera on the scenario's declared
+  center. It had been framing the LA-1 response routes and the regional
+  staging references at Golden Meadow, Galliano, and Larose — roughly 40 km
+  north — which pushed Grand Isle and Port Fourchon to the bottom edge of the
+  screen. Zoom is unchanged; this is a re-centering only, and it applies to
+  the "Overall view" button as well as the opening camera.
+- Kept all four secondary modes (`workflow`, `existing-demo`, `modular-demo`,
+  `disaster-demo`) fully reachable and functionally unchanged — the default
+  moved, nothing was removed or hidden.
+
 ## 2026-09-09 to 2026-09-10 — September research-handoff execution (H1 + H2, in progress)
 
 Prof. Lee and the September 3 advisor meeting set the remainder of September
