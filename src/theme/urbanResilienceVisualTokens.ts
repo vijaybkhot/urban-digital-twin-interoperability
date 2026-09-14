@@ -8,4 +8,6 @@ export const urbanResilienceVisualColors = {
   resource: "#0ea5e9",
   route: "#8b5cf6",
   elevationSampleMarker: "#3b82f6",
+  facilityPublicSafety: "#06b6d4",
+  facilityCommunity: "#a855f7",
 } as const;

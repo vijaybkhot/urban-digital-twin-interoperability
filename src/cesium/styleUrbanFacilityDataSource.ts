@@ -1,10 +1,17 @@
 import * as Cesium from "cesium";
 import { parseUrbanFacilityAttributes } from "../domain/urbanResilience/parseUrbanFacilityAttributes";
 import type { UrbanFacilityAttributes } from "../types/urbanResilience";
+import { urbanResilienceVisualColors } from "../theme/urbanResilienceVisualTokens";
 
-const PUBLIC_SAFETY_COLOR = Cesium.Color.fromCssColorString("#06b6d4");
-const COMMUNITY_COLOR = Cesium.Color.fromCssColorString("#a855f7");
-const SELECTED_COLOR = Cesium.Color.fromCssColorString("#fef08a");
+const PUBLIC_SAFETY_COLOR = Cesium.Color.fromCssColorString(
+  urbanResilienceVisualColors.facilityPublicSafety,
+);
+const COMMUNITY_COLOR = Cesium.Color.fromCssColorString(
+  urbanResilienceVisualColors.facilityCommunity,
+);
+const SELECTED_COLOR = Cesium.Color.fromCssColorString(
+  urbanResilienceVisualColors.selectedPropertyOutline,
+);
 
 function facilityColor(attributes: UrbanFacilityAttributes): Cesium.Color {
   return attributes.facility_category === "public-safety"
