@@ -3,7 +3,12 @@
   top: 16px;
   left: 16px;
   z-index: 10;
-  width: 420px;
+  /* Scales with the viewport instead of sitting at a fixed 420px, which took
+     ~47% of a 900px window and ~60% of a 700px one. The 320px floor keeps the
+     disclaimer and legend readable; the 420px ceiling preserves the original
+     width on large screens. Below 600px the media query at the end of this
+     file still takes over with the deliberate full-width treatment. */
+  width: clamp(320px, 32vw, 420px);
   max-width: calc(100vw - 32px);
   max-height: calc(100vh - 32px);
   box-sizing: border-box;
@@ -14,6 +19,41 @@
   border: 1px solid #d7dbe5;
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+}
+
+.urban-resilience-demo-panel.is-collapsed {
+  /* Sized to its own content, but never wider than the expanded panel would
+     be -- a collapsed bar that grows past the thing it collapsed is not a
+     collapse. The scenario name ellipsizes rather than forcing the bar wider. */
+  width: auto;
+  max-width: min(clamp(320px, 32vw, 420px), calc(100vw - 32px));
+  overflow-y: visible;
+  padding: 12px 14px;
+}
+
+.urban-resilience-demo-panel.is-collapsed .urban-resilience-demo-heading h1 {
+  font-size: 1rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.urban-resilience-demo-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.urban-resilience-demo-heading-text {
+  min-width: 0;
+}
+
+.urban-resilience-demo-collapse-toggle {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 
 .urban-resilience-demo-heading h1 {

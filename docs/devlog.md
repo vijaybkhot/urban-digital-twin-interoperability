@@ -19,6 +19,14 @@
 - Kept all four secondary modes (`workflow`, `existing-demo`, `modular-demo`,
   `disaster-demo`) fully reachable and functionally unchanged — the default
   moved, nothing was removed or hidden.
+- Made the urban panel responsive and collapsible (#147, HO-30). It was a
+  fixed 420 px, which covered ~47% of a 900 px window and ~60% of a 700 px
+  one; only screens ≤600 px had a rule. It now scales between 320 px and
+  420 px, and gained a collapse control that reduces it to a slim title bar
+  so the map can be seen unobstructed at any size. Collapsed state is held in
+  `AppShell` so it survives a mode switch — though that is not yet observable,
+  since the mode-navigation buttons still live inside the panel body until the
+  shared mode switcher lands (#114, HO-17).
 
 ## 2026-09-09 to 2026-09-10 — September research-handoff execution (H1 + H2, in progress)
 
