@@ -90,6 +90,10 @@ export function AppShell() {
   });
   const [isPanelVisible, setIsPanelVisible] = useState(true);
   const [mode, setMode] = useState<ApplicationMode>("urban-resilience-demo");
+  // Lives here rather than in the panel so the choice survives a mode switch:
+  // the panel unmounts when another mode is active, which would reset
+  // panel-local state every time the user came back.
+  const [isUrbanPanelCollapsed, setIsUrbanPanelCollapsed] = useState(false);
   // Urban Resilience Demo is the Sea Grant deliverable and the default mode
   // (HO-25), but its routes/resources only exist after the response-context
   // fetch that openUrbanResilienceDemo performs. Suppress the panel until that
@@ -747,6 +751,8 @@ export function AppShell() {
           facilityExperimentEnabled={urbanFacilityExperimentEnabled}
           ionTokenConfigured={hasCesiumIonAccessToken()}
           osmBuildingsEnabled={isUrbanOsmBuildingsEnabled()}
+          isCollapsed={isUrbanPanelCollapsed}
+          onCollapsedChange={setIsUrbanPanelCollapsed}
           onFocusTarget={focusUrbanTarget}
           onLa1FemaExperimentEnabledChange={(enabled) => {
             setUrbanLa1FemaExperimentEnabled(enabled);

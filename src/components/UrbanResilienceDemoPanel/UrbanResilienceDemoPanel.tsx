@@ -28,6 +28,8 @@ interface UrbanResilienceDemoPanelProps {
   facilityExperimentEnabled: boolean;
   ionTokenConfigured: boolean;
   osmBuildingsEnabled: boolean;
+  isCollapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
   onFocusTarget: (target: UrbanCameraTarget) => void;
   onLa1FemaExperimentEnabledChange: (enabled: boolean) => void;
   onFacilityExperimentEnabledChange: (enabled: boolean) => void;
@@ -55,6 +57,8 @@ export function UrbanResilienceDemoPanel({
   facilityExperimentEnabled,
   ionTokenConfigured,
   osmBuildingsEnabled,
+  isCollapsed,
+  onCollapsedChange,
   onFocusTarget,
   onLa1FemaExperimentEnabledChange,
   onFacilityExperimentEnabledChange,
@@ -105,11 +109,46 @@ export function UrbanResilienceDemoPanel({
     ? groundElevationLookup.records.get(`facility:${selectedFacility.facilityId}`)
     : undefined;
 
+  // Collapsed renders a slim title bar only. The body is removed from the DOM
+  // rather than visually hidden, so screen readers and tab order match what is
+  // actually on screen -- and so a safety disclaimer can never be present but
+  // invisible. Every hook above runs in both states, so the ground-elevation
+  // lookup is not refetched when the panel is expanded again.
+  if (isCollapsed) {
+    return (
+      <aside className="urban-resilience-demo-panel is-collapsed">
+        <div className="urban-resilience-demo-heading">
+          <h1>{scenario.name}</h1>
+          <button
+            className="panel-button urban-resilience-demo-collapse-toggle"
+            type="button"
+            aria-expanded={false}
+            aria-label="Expand panel"
+            onClick={() => onCollapsedChange(false)}
+          >
+            Expand
+          </button>
+        </div>
+      </aside>
+    );
+  }
+
   return (
     <aside className="urban-resilience-demo-panel">
       <div className="urban-resilience-demo-heading">
-        <p className="panel-kicker">Research Prototype / Real Data</p>
-        <h1>{scenario.name}</h1>
+        <div className="urban-resilience-demo-heading-text">
+          <p className="panel-kicker">Research Prototype / Real Data</p>
+          <h1>{scenario.name}</h1>
+        </div>
+        <button
+          className="panel-button urban-resilience-demo-collapse-toggle"
+          type="button"
+          aria-expanded
+          aria-label="Collapse panel"
+          onClick={() => onCollapsedChange(true)}
+        >
+          Collapse
+        </button>
       </div>
 
       <p className="urban-resilience-disclaimer" role="note">
