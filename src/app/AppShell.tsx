@@ -89,7 +89,13 @@ export function AppShell() {
     offsetY: 0,
   });
   const [isPanelVisible, setIsPanelVisible] = useState(true);
-  const [mode, setMode] = useState<ApplicationMode>("workflow");
+  const [mode, setMode] = useState<ApplicationMode>("urban-resilience-demo");
+  // Urban Resilience Demo is the Sea Grant deliverable and the default mode
+  // (HO-25), but its routes/resources only exist after the response-context
+  // fetch that openUrbanResilienceDemo performs. Suppress the panel until that
+  // mount-time load resolves so first paint is never an incomplete scenario.
+  const [isInitializingDefaultMode, setIsInitializingDefaultMode] =
+    useState(true);
   const [selectedModularEntity, setSelectedModularEntity] =
     useState<SelectedModularEntity | null>(null);
   const [selectedDisasterProperty, setSelectedDisasterProperty] =
@@ -407,6 +413,18 @@ export function AppShell() {
     setIsPanelVisible(true);
   }, [clearProject, workflow.resetWorkflow]);
 
+  // Mount-only: run the same load the "Open urban resilience demo" button runs,
+  // so the default mode arrives complete rather than with empty routes and
+  // resources. Deliberately not reactive to openUrbanResilienceDemo's identity
+  // -- rerunning it would reset the user's selections mid-session. Its existing
+  // navigationVersionRef guard absorbs StrictMode's double-invocation and any
+  // manual mode switch that lands before this initial fetch resolves.
+  useEffect(() => {
+    void openUrbanResilienceDemo().finally(() => {
+      setIsInitializingDefaultMode(false);
+    });
+  }, []);
+
   const focusModularTarget = useCallback((target: ModularCameraTarget) => {
     setModularFocusRequest((currentRequest) => ({
       target,
@@ -657,8 +675,16 @@ export function AppShell() {
         />
       )}
       <Toolbar config={activeConfig} />
-      <StatusPanel isLoading={isLoading} error={error} />
-      {mode === "workflow" ? (
+      <StatusPanel
+        isLoading={isLoading || isInitializingDefaultMode}
+        error={error}
+        loadingMessage={
+          isInitializingDefaultMode
+            ? "Loading urban resilience scenario..."
+            : undefined
+        }
+      />
+      {isInitializingDefaultMode ? null : mode === "workflow" ? (
         <ReconstructionWorkflowPanel
           step={workflow.step}
           projectName={workflow.projectName}
