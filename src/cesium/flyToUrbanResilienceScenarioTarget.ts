@@ -89,12 +89,20 @@ export function flyToUrbanResilienceScenarioTarget(
     return flyToPoints(viewer, floodPoints, URBAN_FLOOD_CAMERA_PITCH, URBAN_FLOOD_CAMERA_RANGE_M);
   }
 
-  const overallPoints = [
-    ...floodPoints,
-    ...scenario.routes.flatMap((route) => route.positions.map((coordinate) => pointFromCoordinate(coordinate))),
-    ...scenario.resources.map((resource) => pointFromCoordinate(resource.location)),
-    ...getEntityFootprintPoints(propertyEntities),
-  ];
-
-  return flyToPoints(viewer, overallPoints, URBAN_OVERALL_CAMERA_PITCH, URBAN_OVERALL_CAMERA_RANGE_M);
+  // The overall view frames the two study areas themselves, centered on the
+  // scenario's own declared center. It deliberately excludes the LA-1 response
+  // routes and the regional staging references: those run ~40 km north to
+  // Golden Meadow, Galliano, and Larose, and including them pulled the framing
+  // so far north that Grand Isle and Port Fourchon sat at the bottom edge of
+  // the screen. Framing a fixed coordinate rather than the loaded building
+  // footprints also keeps this view deterministic -- it cannot depend on
+  // whether the property layer has finished loading when the camera fires.
+  // scenario.center is within ~700 m of the footprints' bbox center, which is
+  // imperceptible at URBAN_OVERALL_CAMERA_RANGE_M.
+  return flyToPoints(
+    viewer,
+    [pointFromCoordinate(scenario.center)],
+    URBAN_OVERALL_CAMERA_PITCH,
+    URBAN_OVERALL_CAMERA_RANGE_M,
+  );
 }
