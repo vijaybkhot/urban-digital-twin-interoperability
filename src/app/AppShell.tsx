@@ -10,7 +10,6 @@ import { ModularHousingDemoPanel } from "../components/ModularHousingDemoPanel/M
 import { ReconstructionWorkflowPanel } from "../components/ReconstructionWorkflowPanel/ReconstructionWorkflowPanel";
 import { SidePanel } from "../components/SidePanel/SidePanel";
 import { StatusPanel } from "../components/StatusPanel/StatusPanel";
-import { Toolbar } from "../components/Toolbar/Toolbar";
 import { createDisasterResilienceViewerConfig } from "../domain/disasterResilience/createDisasterResilienceViewerConfig";
 import { mockDisasterResilienceScenario } from "../domain/disasterResilience/mockDisasterResilienceScenario";
 import { applyModularStatusAction } from "../domain/modularHousing/applyModularStatusAction";
@@ -705,7 +704,6 @@ export function AppShell() {
           }}
         />
       )}
-      <Toolbar config={activeConfig} />
       {isInitializingDefaultMode ? null : (
         <ModeSwitcher activeMode={mode} onSelectMode={selectMode} />
       )}
@@ -744,10 +742,6 @@ export function AppShell() {
           onImageSelectionChange={workflow.handleImageSelection}
           onStartReconstruction={() => void workflow.startReconstruction()}
           onResetWorkflow={workflow.resetWorkflow}
-          onOpenExistingDemo={() => void openExistingDemo()}
-          onOpenModularDemo={openModularDemo}
-          onOpenDisasterDemo={openDisasterDemo}
-          onOpenUrbanResilienceDemo={() => void openUrbanResilienceDemo()}
         />
       ) : mode === "modular-demo" ? (
         <ModularHousingDemoPanel
