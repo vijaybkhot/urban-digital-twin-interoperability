@@ -29,28 +29,6 @@ input {
   height: 100vh;
 }
 
-.toolbar {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 9;
-  display: none;
-  gap: 10px;
-  align-items: center;
-  max-width: calc(100vw - 380px);
-  padding: 10px 14px;
-  color: #1d2736;
-  background: rgba(247, 248, 251, 0.9);
-  border: 1px solid #d7dbe5;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
-}
-
-.toolbar span {
-  color: #475569;
-  font-size: 0.9rem;
-}
-
 .status-panel {
   position: absolute;
   left: 50%;

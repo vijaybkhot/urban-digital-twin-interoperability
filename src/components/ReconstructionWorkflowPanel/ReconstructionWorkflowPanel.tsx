@@ -34,10 +34,6 @@ interface ReconstructionWorkflowPanelProps {
   ) => void;
   onStartReconstruction: () => void;
   onResetWorkflow: () => void;
-  onOpenExistingDemo: () => void;
-  onOpenModularDemo: () => void;
-  onOpenDisasterDemo: () => void;
-  onOpenUrbanResilienceDemo: () => void;
 }
 
 function getJobMessage(job: ReconstructionJob | null): string {
@@ -85,10 +81,6 @@ export function ReconstructionWorkflowPanel({
   onImageSelectionChange,
   onStartReconstruction,
   onResetWorkflow,
-  onOpenExistingDemo,
-  onOpenModularDemo,
-  onOpenDisasterDemo,
-  onOpenUrbanResilienceDemo,
 }: ReconstructionWorkflowPanelProps) {
   const completedAsset = config.modelAssets?.[0] ?? null;
   const viewerSupport = completedAsset
@@ -208,34 +200,6 @@ export function ReconstructionWorkflowPanel({
               onClick={onCreateProject}
             >
               Create project
-            </button>
-            <button
-              className="panel-button"
-              type="button"
-              onClick={onOpenExistingDemo}
-            >
-              Open existing demo
-            </button>
-            <button
-              className="panel-button"
-              type="button"
-              onClick={onOpenModularDemo}
-            >
-              Open modular housing demo
-            </button>
-            <button
-              className="panel-button"
-              type="button"
-              onClick={onOpenDisasterDemo}
-            >
-              Disaster Resilience Demo
-            </button>
-            <button
-              className="panel-button"
-              type="button"
-              onClick={onOpenUrbanResilienceDemo}
-            >
-              Urban Resilience Demo (Grand Isle & Port Fourchon)
             </button>
           </div>
         </>
