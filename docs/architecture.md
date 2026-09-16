@@ -115,6 +115,14 @@ The ArcGIS SceneView source remains under `src/experiments` with a separate
 HTML entry point. It consumes upstream classifications already stored in local
 GeoJSON and does not alter the Cesium implementation.
 
+`src/domain/urbanResilience/urbanResilienceLayerRegistry.ts`
+(`docs/decisions/008-urban-layer-registry.md`) is the declarative,
+panel/AppShell-side description of what each urban-resilience layer is --
+identity, provenance, default visibility, and legend content. It is
+deliberately **not** a rendering abstraction and holds no Cesium types; it
+is safe for any React component to import directly. `ViewerAdapter` remains
+the only boundary that actually drives the viewer.
+
 ## Reconstruction boundary
 
 The current browser workflow performs deterministic image-readiness checks and
