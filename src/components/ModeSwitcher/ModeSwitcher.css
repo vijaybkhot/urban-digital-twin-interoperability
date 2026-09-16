@@ -1,0 +1,109 @@
+.mode-switcher {
+  position: absolute;
+  /* Bottom-right. The panels occupy the left column top-to-bottom, so the
+     left side -- at any height -- is their slot; occupying it is exactly how
+     Toolbar.tsx ended up permanently covered. Raised clear of Cesium's
+     fullscreen control in the corner, and well away from the credit and
+     attribution line on the bottom-left, which must stay visible. */
+  bottom: 40px;
+  right: 16px;
+  /* Above the panels' z-index: 10, below .status-panel's 12. */
+  z-index: 11;
+  width: 260px;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
+  color: #1d2736;
+  background: rgba(247, 248, 251, 0.97);
+  border: 1px solid #d7dbe5;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+}
+
+.mode-switcher-primary {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  text-align: left;
+  color: #0f172a;
+  background: #e0f2fe;
+  border: 0;
+  border-bottom: 1px solid #d7dbe5;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.mode-switcher-primary:hover:not(:disabled) {
+  background: #bae6fd;
+}
+
+.mode-switcher-primary:disabled {
+  background: #f1f5f9;
+  cursor: default;
+}
+
+.mode-switcher-primary-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.mode-switcher-primary-note {
+  color: #475569;
+  font-size: 0.74rem;
+}
+
+.mode-switcher-secondary > summary {
+  padding: 8px 12px;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mode-switcher-secondary[open] > summary {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.mode-switcher-secondary ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+}
+
+.mode-switcher-secondary button {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  text-align: left;
+  color: #1d2736;
+  background: #ffffff;
+  border: 1px solid #d7dbe5;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.mode-switcher-secondary button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.mode-switcher-secondary button:disabled {
+  color: #475569;
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  cursor: default;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .mode-switcher {
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}

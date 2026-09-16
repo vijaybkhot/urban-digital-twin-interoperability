@@ -36,15 +36,10 @@ import type {
   SelectedUrbanFacility,
   SelectedUrbanProperty,
 } from "../types/urbanResilience";
+import type { ApplicationMode } from "../types/applicationMode";
+import { ModeSwitcher } from "../components/ModeSwitcher/ModeSwitcher";
 import { useProjectState } from "./useProjectState";
 import { useReconstructionWorkflow } from "./useReconstructionWorkflow";
-
-type ApplicationMode =
-  | "workflow"
-  | "existing-demo"
-  | "modular-demo"
-  | "disaster-demo"
-  | "urban-resilience-demo";
 
 // Stable empty-set default so a not-yet-loaded (or failed) elevation-sample
 // fetch does not create a new Set identity on every render.
@@ -429,6 +424,38 @@ export function AppShell() {
     });
   }, []);
 
+  // Thin façade so ModeSwitcher takes one prop instead of five. Deliberately
+  // does not refactor the five callbacks' internals -- each carries
+  // navigationVersionRef load-race protection that this must not disturb.
+  const selectMode = useCallback(
+    (nextMode: ApplicationMode) => {
+      switch (nextMode) {
+        case "workflow":
+          startNewProject();
+          return;
+        case "existing-demo":
+          void openExistingDemo();
+          return;
+        case "modular-demo":
+          openModularDemo();
+          return;
+        case "disaster-demo":
+          openDisasterDemo();
+          return;
+        case "urban-resilience-demo":
+          void openUrbanResilienceDemo();
+          return;
+      }
+    },
+    [
+      startNewProject,
+      openExistingDemo,
+      openModularDemo,
+      openDisasterDemo,
+      openUrbanResilienceDemo,
+    ],
+  );
+
   const focusModularTarget = useCallback((target: ModularCameraTarget) => {
     setModularFocusRequest((currentRequest) => ({
       target,
@@ -679,6 +706,9 @@ export function AppShell() {
         />
       )}
       <Toolbar config={activeConfig} />
+      {isInitializingDefaultMode ? null : (
+        <ModeSwitcher activeMode={mode} onSelectMode={selectMode} />
+      )}
       <StatusPanel
         isLoading={isLoading || isInitializingDefaultMode}
         error={error}
@@ -725,10 +755,6 @@ export function AppShell() {
           selectedModularEntity={selectedModularEntity}
           onFocusTarget={focusModularTarget}
           onApplyModularAction={applyModularAction}
-          onNewProject={startNewProject}
-          onOpenExistingDemo={() => void openExistingDemo()}
-          onOpenDisasterDemo={openDisasterDemo}
-          onOpenUrbanResilienceDemo={() => void openUrbanResilienceDemo()}
         />
       ) : mode === "disaster-demo" ? (
         <DisasterResilienceDemoPanel
@@ -736,10 +762,6 @@ export function AppShell() {
           selectedProperty={selectedDisasterProperty}
           osmBuildingsConfigured={hasCesiumIonAccessToken()}
           onFocusTarget={focusDisasterTarget}
-          onNewProject={startNewProject}
-          onOpenExistingDemo={() => void openExistingDemo()}
-          onOpenModularDemo={openModularDemo}
-          onOpenUrbanResilienceDemo={() => void openUrbanResilienceDemo()}
         />
       ) : mode === "urban-resilience-demo" ? (
         <UrbanResilienceDemoPanel
@@ -768,10 +790,6 @@ export function AppShell() {
               setSelectedUrbanFacility(null);
             }
           }}
-          onNewProject={startNewProject}
-          onOpenExistingDemo={() => void openExistingDemo()}
-          onOpenModularDemo={openModularDemo}
-          onOpenDisasterDemo={openDisasterDemo}
         />
       ) : (
         <>
@@ -798,10 +816,6 @@ export function AppShell() {
             auditEvents={auditEvents}
             isVisible={isPanelVisible}
             onHide={() => setIsPanelVisible(false)}
-            onNewProject={startNewProject}
-            onOpenModularDemo={openModularDemo}
-            onOpenDisasterDemo={openDisasterDemo}
-            onOpenUrbanResilienceDemo={() => void openUrbanResilienceDemo()}
             onClearSelection={clearSelection}
             onResetPosition={() => {
               setIsPanelVisible(true);

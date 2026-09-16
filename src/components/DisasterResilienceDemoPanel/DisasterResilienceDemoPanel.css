@@ -554,15 +554,6 @@
   line-height: 1.45;
 }
 
-.disaster-resilience-demo-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid #d7dbe5;
-}
-
 @media (max-width: 600px) {
   .disaster-resilience-demo-panel {
     top: 12px;

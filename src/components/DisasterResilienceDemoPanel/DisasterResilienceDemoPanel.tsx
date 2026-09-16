@@ -14,10 +14,6 @@ interface DisasterResilienceDemoPanelProps {
   selectedProperty: SelectedDisasterProperty | null;
   osmBuildingsConfigured: boolean;
   onFocusTarget: (target: DisasterCameraTarget) => void;
-  onNewProject: () => void;
-  onOpenExistingDemo: () => void;
-  onOpenModularDemo: () => void;
-  onOpenUrbanResilienceDemo: () => void;
 }
 
 function formatCoordinate(value: number): string {
@@ -33,10 +29,6 @@ export function DisasterResilienceDemoPanel({
   selectedProperty,
   osmBuildingsConfigured,
   onFocusTarget,
-  onNewProject,
-  onOpenExistingDemo,
-  onOpenModularDemo,
-  onOpenUrbanResilienceDemo,
 }: DisasterResilienceDemoPanelProps) {
   return (
     <aside className="disaster-resilience-demo-panel">
@@ -245,32 +237,6 @@ export function DisasterResilienceDemoPanel({
         </p>
       </section>
 
-      <div className="disaster-resilience-demo-actions">
-        <button className="panel-button" type="button" onClick={onNewProject}>
-          New project workflow
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenExistingDemo}
-        >
-          Open existing demo
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenModularDemo}
-        >
-          Open modular housing demo
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenUrbanResilienceDemo}
-        >
-          Open urban resilience demo
-        </button>
-      </div>
     </aside>
   );
 }

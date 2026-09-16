@@ -25,10 +25,6 @@ interface ModularHousingDemoPanelProps {
     actionId: ModularStatusActionId,
     moduleId: string,
   ) => void;
-  onNewProject: () => void;
-  onOpenExistingDemo: () => void;
-  onOpenDisasterDemo: () => void;
-  onOpenUrbanResilienceDemo: () => void;
 }
 
 function formatCoordinate(location: { lat: number; lon: number }): string {
@@ -44,10 +40,6 @@ export function ModularHousingDemoPanel({
   selectedModularEntity = null,
   onFocusTarget,
   onApplyModularAction,
-  onNewProject,
-  onOpenExistingDemo,
-  onOpenDisasterDemo,
-  onOpenUrbanResilienceDemo,
 }: ModularHousingDemoPanelProps) {
   const selectedDetails = getSelectedModularEntityDetails(
     scenario,
@@ -75,33 +67,6 @@ export function ModularHousingDemoPanel({
         digital twin view. No real AI, robotics, backend, or live physical-system
         integration is connected.
       </p>
-
-      <div className="modular-demo-actions">
-        <button className="panel-button" type="button" onClick={onNewProject}>
-          New project workflow
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenExistingDemo}
-        >
-          Open existing demo
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenDisasterDemo}
-        >
-          Disaster Resilience Demo
-        </button>
-        <button
-          className="panel-button"
-          type="button"
-          onClick={onOpenUrbanResilienceDemo}
-        >
-          Urban Resilience Demo
-        </button>
-      </div>
 
       <section className="modular-demo-section">
         <h2>Map View</h2>

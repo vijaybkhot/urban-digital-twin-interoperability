@@ -33,10 +33,6 @@ interface UrbanResilienceDemoPanelProps {
   onFocusTarget: (target: UrbanCameraTarget) => void;
   onLa1FemaExperimentEnabledChange: (enabled: boolean) => void;
   onFacilityExperimentEnabledChange: (enabled: boolean) => void;
-  onNewProject: () => void;
-  onOpenExistingDemo: () => void;
-  onOpenModularDemo: () => void;
-  onOpenDisasterDemo: () => void;
 }
 
 function formatCoordinate(value: number): string {
@@ -62,10 +58,6 @@ export function UrbanResilienceDemoPanel({
   onFocusTarget,
   onLa1FemaExperimentEnabledChange,
   onFacilityExperimentEnabledChange,
-  onNewProject,
-  onOpenExistingDemo,
-  onOpenModularDemo,
-  onOpenDisasterDemo,
 }: UrbanResilienceDemoPanelProps) {
   const [groundElevationLookup, setGroundElevationLookup] =
     useState<UrbanGroundElevationLookupState>({
@@ -296,20 +288,6 @@ export function UrbanResilienceDemoPanel({
         </p>
       </section>
 
-      <div className="urban-resilience-demo-actions">
-        <button className="panel-button" type="button" onClick={onNewProject}>
-          New project workflow
-        </button>
-        <button className="panel-button" type="button" onClick={onOpenExistingDemo}>
-          Open existing demo
-        </button>
-        <button className="panel-button" type="button" onClick={onOpenModularDemo}>
-          Open modular housing demo
-        </button>
-        <button className="panel-button" type="button" onClick={onOpenDisasterDemo}>
-          Open disaster resilience demo
-        </button>
-      </div>
     </aside>
   );
 }
