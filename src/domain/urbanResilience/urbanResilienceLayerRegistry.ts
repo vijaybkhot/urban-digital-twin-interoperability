@@ -102,7 +102,13 @@ export interface UrbanLayerProvenance {
 
 /** Symbol shape shown in the legend swatch -- purely descriptive metadata,
  * not a rendering instruction. */
-export type UrbanLegendSwatchSymbol = "polygon" | "outline" | "point" | "line";
+export type UrbanLegendSwatchSymbol =
+  | "property"
+  | "selected"
+  | "flood"
+  | "resource"
+  | "route"
+  | "facility";
 
 /** One row of legend content. `color` must always be a value copied from
  * `urbanResilienceVisualColors`, never a literal hex string, so the legend
@@ -128,12 +134,10 @@ export interface UrbanLayerDefinition {
   defaultVisible: boolean;
   /**
    * Whether an explicit, independent on/off control exists for this layer
-   * today. `response-routes` is `false` as of this issue (HO-18): its
-   * visibility is currently a side effect of the `la1-fema-experiment`
-   * toggle (see `docs/data/urban-resilience-layers.md`, layer 3) rather
-   * than its own control. Issue #116 (HO-19) is expected to flip this to
-   * `true` once it wires an independent toggle -- that is a behavior
-   * change and belongs to that issue, not this inert registry.
+   * today. `response-routes` was `false` when this registry first landed
+   * inert (Issue #115, HO-18), reflecting that its visibility was then a
+   * side effect of the `la1-fema-experiment` toggle. Issue #116 (HO-19)
+   * flipped it to `true` when it wired up that independent control.
    */
   toggleable: boolean;
   /** Whether clicking a feature in this layer produces a `ViewerSelection`
@@ -177,37 +181,37 @@ export const urbanResilienceLayers: readonly UrbanLayerDefinition[] = [
       {
         label: "Low risk",
         color: urbanResilienceVisualColors.riskLow,
-        symbol: "polygon",
+        symbol: "property",
         detail: "Mapped outside the FEMA Special Flood Hazard Area",
       },
       {
         label: "Moderate risk",
         color: urbanResilienceVisualColors.riskModerate,
-        symbol: "polygon",
+        symbol: "property",
         detail: "FEMA Zone A / AE / AH / AO / AR / A99 (1% annual chance flood)",
       },
       {
         label: "High risk",
         color: urbanResilienceVisualColors.riskHigh,
-        symbol: "polygon",
+        symbol: "property",
         detail: "FEMA Zone V / VE (coastal high-hazard, wave action)",
       },
       {
         label: "Unknown — coverage unavailable",
         color: urbanResilienceVisualColors.riskUnknown,
-        symbol: "polygon",
+        symbol: "property",
         detail: "No FEMA NFHL polygon was available; this is not a Low-risk finding",
       },
       {
         label: "Selected property",
         color: urbanResilienceVisualColors.selectedPropertyOutline,
-        symbol: "outline",
+        symbol: "selected",
         detail: "Yellow outline and label",
       },
       {
         label: "Ground-elevation sample available",
         color: urbanResilienceVisualColors.elevationSampleMarker,
-        symbol: "point",
+        symbol: "resource",
         detail: "Click the building to see the reading",
       },
     ],
@@ -244,7 +248,7 @@ export const urbanResilienceLayers: readonly UrbanLayerDefinition[] = [
       {
         label: "FEMA flood zone overlay",
         color: urbanResilienceVisualColors.floodZoneOutline,
-        symbol: "outline",
+        symbol: "flood",
         detail: "Real NFHL polygons, ground-draped by risk tier",
       },
     ],
@@ -269,19 +273,27 @@ export const urbanResilienceLayers: readonly UrbanLayerDefinition[] = [
         "shelters.",
     },
     defaultVisible: true,
-    toggleable: false,
+    // Given its own independent toggle by Issue #116 (HO-19), replacing the
+    // side-effect coupling to la1-fema-experiment's toggle that existed
+    // when this registry first landed inert (HO-18). Note: the toggle only
+    // ever gates route polyline visibility (setUrbanResponseRoutesVisible,
+    // unchanged); the staging-resource point markers below have always
+    // been unaffected and stay visible even if this layer is turned off --
+    // a known minor legend/map mismatch in that one edge case, not fixed
+    // here to avoid expanding this layer into two registry entries.
+    toggleable: true,
     selectable: false,
     legend: [
       {
         label: "Regional staging reference",
         color: urbanResilienceVisualColors.resource,
-        symbol: "point",
+        symbol: "resource",
         detail: "Approximate town center; not an official shelter",
       },
       {
         label: "LA-1 response route",
         color: urbanResilienceVisualColors.route,
-        symbol: "line",
+        symbol: "route",
         detail: "Real road geometry; status is a research judgment",
       },
     ],
@@ -309,7 +321,7 @@ export const urbanResilienceLayers: readonly UrbanLayerDefinition[] = [
       {
         label: "Public-safety facility",
         color: urbanResilienceVisualColors.facilityPublicSafety,
-        symbol: "point",
+        symbol: "facility",
         detail:
           "OSM-derived fire station, police, or similar; absence elsewhere " +
           "does not mean none exist",
@@ -317,7 +329,7 @@ export const urbanResilienceLayers: readonly UrbanLayerDefinition[] = [
       {
         label: "Community facility",
         color: urbanResilienceVisualColors.facilityCommunity,
-        symbol: "point",
+        symbol: "facility",
         detail:
           "OSM-derived town hall, school, or similar; absence elsewhere " +
           "does not mean none exist",

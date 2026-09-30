@@ -292,6 +292,24 @@
   line-height: 1.45;
 }
 
+.urban-data-layer-toggle {
+  margin-top: 12px;
+}
+
+.urban-data-layer-toggle:first-child {
+  margin-top: 0;
+}
+
+.urban-response-routes-toggle {
+  width: 100%;
+}
+
+.urban-response-routes-toggle[aria-pressed="true"] {
+  color: #0f172a;
+  background: #ede9fe;
+  border-color: #8b5cf6;
+}
+
 .urban-la1-experiment-toggle {
   width: 100%;
 }

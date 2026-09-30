@@ -1,5 +1,51 @@
 # Devlog
 
+## 2026-09-30
+
+- Gave the urban response routes their own independent on/off toggle
+  (#116, HO-19). Previously, turning on the experimental LA-1/FEMA layer
+  also hid the purple response routes — an either/or presentation from the
+  original design, with no way to show both at once. Layer on/off state now
+  lives in one registry-seeded record in `AppShell` instead of two
+  hand-written booleans, and all three toggles (response routes, facility
+  layer, LA-1 experimental layer) sit together in a new "Data layers"
+  section, each with its existing safety note directly beside it, verbatim.
+- The map legend now renders from the layer registry and follows what is
+  switched on: the two facility rows appear only when the facility layer is
+  on, and the route rows disappear when routes are turned off.
+- One user-facing sentence changed, because the old one described the
+  coupling that no longer exists. The LA-1 layer note now reads: "The
+  experimental layer draws the original OpenStreetMap LA-1 ways. The
+  simplified purple response routes are controlled separately, above."
+- Not changed: `ViewerAdapter`, `CesiumViewerAdapter`, `CesiumScene`, and
+  every `src/cesium/*.ts` styler have zero diff. Known edge case: the route
+  toggle only ever gated route lines, so the three staging-reference points
+  stay on the map when routes are off even though their legend row hides.
+- Direction noted, not scheduled: the LA-1 experimental layer traces real
+  road geometry and is the more defensible representation of the corridor;
+  it may eventually replace the hand-simplified purple routes once #67
+  settles when a segment can carry a real verdict.
+
+## 2026-09-16
+
+- Replaced per-panel mode navigation with one shared mode switcher
+  (#114, HO-17, split into two PRs). Each panel used to carry its own
+  subset of "open another mode" buttons, with the same destination under up
+  to three different labels. A single switcher in the bottom-right corner
+  now reaches all five modes from any mode, with the urban resilience demo
+  always prominent and the other four one click away under "Other demo
+  modes". `ApplicationMode` moved to `src/types/applicationMode.ts` so the
+  mode taxonomy is importable. The switcher sits bottom-right rather than
+  the originally specified bottom-left, because the full-height urban panel
+  now occupies the whole left column.
+- Deleted `Toolbar.tsx`, which had been hidden by `.toolbar { display: none }`
+  and had never rendered.
+- Added the urban layer registry,
+  `src/domain/urbanResilience/urbanResilienceLayerRegistry.ts` (#115,
+  HO-18; ADR 008): one typed entry per urban layer giving its identity,
+  provenance, default visibility, and legend rows. It landed with no
+  consumers and no behavior change.
+
 ## 2026-09-14
 
 - Made `urban-resilience-demo` the application's default mode on first load
