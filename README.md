@@ -105,43 +105,15 @@ endorsement.
 The main application keeps five modes isolated in
 [`src/app/AppShell.tsx`](src/app/AppShell.tsx).
 
-### 1. New-project and image-intake workflow
+The **urban-resilience demo is the primary implemented research deliverable**
+for the Sea Grant project, and the application opens in it by default. The
+other four modes are earlier-stage proof-of-concept, proposal, and
+fictional-data demonstrations, retained for reference and continuity. A mode
+switcher in the bottom-right corner of the application reaches all five: the
+urban-resilience demo is always shown, and the other four are grouped under
+"Other demo modes".
 
-An implemented browser-only workflow for entering a project location,
-selecting local images, reviewing deterministic metadata checks, and running a
-mock reconstruction lifecycle. Selected images remain local to the browser.
-The completed mock job displays the bundled Cesium Milk Truck GLB; it does not
-run COLMAP or photogrammetry.
-
-### 2. Existing controlled-facility demo
-
-An implemented mock facility scene with a controlled-area boundary,
-measurement points, Low/Medium/High belief states, editable readings, manual
-overrides, recommendations, audit history, a sample model, and model-linked
-annotations. This mode loads `public/project_config.json` only when explicitly
-opened.
-
-### 3. Modular-housing demo
-
-An implemented proposal-oriented mock scenario containing a factory, modular
-units, a logistics route, staging and construction areas, status actions,
-camera controls, and an event feed. It is not connected to real factories,
-robotics, logistics systems, or construction operations.
-
-### 4. Property-specific disaster-resilience demo
-
-An implemented but fully fictional Baton Rouge-area scenario with six
-synthetic properties, a mock HEC-RAS-style flood-depth volume, a fictional
-shelter, a mock route, camera presets, a resident-facing dashboard, and a
-multi-twin event feed.
-
-The property footprints are not aligned with real parcels, roads, buildings,
-or private addresses. The flood layer is not HEC-RAS output, current flooding,
-a forecast, or emergency guidance.
-
-> **Demonstration only. Not for real emergency use.**
-
-### 5. Urban-resilience demo
+### 1. Urban-resilience demo
 
 An implemented research scenario using real public-data geometry for Grand
 Isle, Port Fourchon, and parts of the Louisiana Highway 1 corridor. It uses
@@ -159,6 +131,42 @@ remains `Unknown`.
 Each of this mode's seven layers — how it loads, styles, toggles, and what it
 means — is documented individually in
 [`docs/data/urban-resilience-layers.md`](docs/data/urban-resilience-layers.md).
+
+### 2. New-project and image-intake workflow
+
+An implemented browser-only workflow for entering a project location,
+selecting local images, reviewing deterministic metadata checks, and running a
+mock reconstruction lifecycle. Selected images remain local to the browser.
+The completed mock job displays the bundled Cesium Milk Truck GLB; it does not
+run COLMAP or photogrammetry.
+
+### 3. Existing controlled-facility demo
+
+An implemented mock facility scene with a controlled-area boundary,
+measurement points, Low/Medium/High belief states, editable readings, manual
+overrides, recommendations, audit history, a sample model, and model-linked
+annotations. This mode loads `public/project_config.json` only when explicitly
+opened.
+
+### 4. Modular-housing demo
+
+An implemented proposal-oriented mock scenario containing a factory, modular
+units, a logistics route, staging and construction areas, status actions,
+camera controls, and an event feed. It is not connected to real factories,
+robotics, logistics systems, or construction operations.
+
+### 5. Property-specific disaster-resilience demo
+
+An implemented but fully fictional Baton Rouge-area scenario with six
+synthetic properties, a mock HEC-RAS-style flood-depth volume, a fictional
+shelter, a mock route, camera presets, a resident-facing dashboard, and a
+multi-twin event feed.
+
+The property footprints are not aligned with real parcels, roads, buildings,
+or private addresses. The flood layer is not HEC-RAS output, current flooding,
+a forecast, or emergency guidance.
+
+> **Demonstration only. Not for real emergency use.**
 
 ### ArcGIS visualization-portability experiment
 

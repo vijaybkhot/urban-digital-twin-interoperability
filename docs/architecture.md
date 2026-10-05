@@ -13,8 +13,17 @@ reconstruction service in this repository.
 
 ## Application modes
 
-The main application currently implements five modes:
+The main application currently implements five modes. The urban-resilience
+demo is the primary implemented research deliverable for the Sea Grant
+project and the mode the application opens in. The other four are
+earlier-stage proof-of-concept, proposal, and fictional-data demonstrations,
+retained for reference and continuity. A shared mode switcher
+(`src/components/ModeSwitcher/`) reaches all five; the mode list itself is
+defined in `src/types/applicationMode.ts`.
 
+- **Urban-resilience demo — implemented research scenario.** Uses committed
+  OSM/FEMA/USGS-derived artifacts and conservative coverage and interpretation
+  rules.
 - **New-project workflow — implemented browser prototype.** Reviews project
   location and local image metadata, then runs a mock reconstruction lifecycle.
 - **Existing controlled-facility demo — implemented mock scenario.** Loads
@@ -26,9 +35,6 @@ The main application currently implements five modes:
 - **Property-specific disaster-resilience demo — implemented fictional
   scenario.** Uses synthetic properties, mock flood and response information,
   and prominent emergency-use limitations.
-- **Urban-resilience demo — implemented research scenario.** Uses committed
-  OSM/FEMA/USGS-derived artifacts and conservative coverage and interpretation
-  rules.
 
 The isolated ArcGIS page is an **experimental visualization client**, not a
 sixth main mode and not an independent spatial-processing pipeline.

@@ -1,5 +1,21 @@
 # Devlog
 
+## 2026-10-07
+
+- Reordered the docs so the urban-resilience demo is presented first
+  (#128, HO-26). `README.md` and `docs/architecture.md` now describe it
+  first among the five modes and state that it is the primary research
+  deliverable and the default on launch, with the other four as
+  earlier-stage demos retained for reference. Every mode description is
+  unchanged, only reordered. `docs/handoff/onboarding.md` no longer says
+  the app opens in `workflow` or that mode buttons sit in each panel; it
+  describes the default urban mode and the bottom-right mode switcher.
+- Corrected `docs/data/data-register.md` section 8: `project_config.json`
+  drives only `existing-demo`. It never set the `workflow` mode's camera
+  (that mode builds its own preview config in `useReconstructionWorkflow.ts`),
+  and `workflow` is no longer the default. The onboarding link to that
+  section was updated to the new heading.
+
 ## 2026-10-06
 
 - Regrouped the urban panel into six sections (#118, HO-21), so the legend
