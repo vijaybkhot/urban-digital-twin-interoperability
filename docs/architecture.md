@@ -111,6 +111,9 @@ Current adapters include:
 These interfaces make future provider replacement possible; they do not imply
 that a real agent, backend, or reconstruction system is already integrated.
 
+For the files a new urban layer or a new mode touches across these layers, in
+order, see the [extension guide](handoff/extending.md).
+
 ## Viewer isolation
 
 Cesium-specific imports remain concentrated under `src/cesium` and

@@ -161,7 +161,8 @@ right:
 1. Create a branch.
 2. Make one small, real edit — for example, add one field to a dataset's
    entry in `docs/data/data-register.md`, or adjust one legend label's
-   wording in `src/components/UrbanResilienceDemoPanel/UrbanMapLegend.tsx`.
+   wording in `src/domain/urbanResilience/urbanResilienceLayerRegistry.ts`
+   (legend rows are defined there; `UrbanMapLegend.tsx` only renders them).
 3. Run `npm run validate` and confirm it passes.
 4. Open a PR against `main`.
 
@@ -169,3 +170,7 @@ If any step here didn't work the way this guide says it would, that's the
 most useful bug report you can file — it means this document is wrong, and
 fixing it helps the next person more than almost anything else you could do
 first.
+
+When you're ready for a real change (a new data layer, a regenerated
+dataset, or a new mode), follow the step-by-step recipes in
+[the extension guide](extending.md).
