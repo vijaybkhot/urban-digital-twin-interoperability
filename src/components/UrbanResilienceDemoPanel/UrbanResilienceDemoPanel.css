@@ -780,3 +780,119 @@
     gap: 2px;
   }
 }
+
+/* Collapsible sections (HO-21). Native <details>/<summary>; colors reuse the
+   panel's existing palette. */
+.urban-collapsible-summary {
+  /* Sticks to the top of the scrolling panel so any section can be collapsed
+     without scrolling back up. The background matches the panel so content
+     does not show through. */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 6px 0;
+  background: #f7f8fb;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.urban-collapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.urban-collapsible-summary::before {
+  content: "\25B8";
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.urban-collapsible[open] > .urban-collapsible-summary::before {
+  content: "\25BE";
+}
+
+.urban-collapsible-summary:focus-visible {
+  outline: 2px solid #475569;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.urban-resilience-demo-section .urban-collapsible-summary h2 {
+  margin: 0;
+}
+
+.urban-collapsible-badge {
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.urban-collapsible-body {
+  margin-top: 10px;
+}
+
+.urban-resilience-demo-subsection {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #d7dbe5;
+}
+
+.urban-collapsible-body > .urban-resilience-demo-subsection:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.urban-subsection-heading {
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 0.92rem;
+}
+
+.urban-research-links {
+  margin: 0;
+  padding-left: 18px;
+}
+
+/* Small collapsibles inside a section (Scenario, Regional staging references). */
+.urban-subcollapsible-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.urban-subcollapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.urban-subcollapsible-summary::before {
+  content: "\25B8";
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.urban-subcollapsible[open] > .urban-subcollapsible-summary::before {
+  content: "\25BE";
+}
+
+.urban-subcollapsible-summary:focus-visible {
+  outline: 2px solid #475569;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.urban-subcollapsible-summary h3 {
+  margin: 0;
+}
+
+.urban-subcollapsible[open] > .urban-subcollapsible-summary {
+  margin-bottom: 8px;
+}
+
+.urban-response-staging {
+  margin-top: 14px;
+}

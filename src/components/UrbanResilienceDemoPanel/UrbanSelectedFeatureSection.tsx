@@ -6,6 +6,7 @@ import type {
   SelectedUrbanProperty,
   UrbanGroundElevationAttributes,
 } from "../../types/urbanResilience";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { UrbanFacilityExperimentPanel } from "./UrbanFacilityExperimentPanel";
 import { UrbanGroundElevationDetails } from "./UrbanGroundElevationDetails";
 import { UrbanLa1FemaExperimentPanel } from "./UrbanLa1FemaExperimentPanel";
@@ -64,12 +65,12 @@ export function UrbanSelectedFeatureSection({
   );
 
   return (
-    <section
-      className="urban-resilience-demo-section urban-selected-feature"
-      aria-labelledby="urban-selected-feature-title"
+    <CollapsibleSection
+      id="urban-selected-feature-title"
+      title="Selected feature"
+      defaultOpen
+      className="urban-selected-feature"
     >
-      <h2 id="urban-selected-feature-title">Selected feature</h2>
-
       {activeSelection === "property" && selectedProperty && (
         <UrbanPropertyDashboard
           scenarioName={scenarioName}
@@ -113,6 +114,6 @@ export function UrbanSelectedFeatureSection({
           )}
         </div>
       )}
-    </section>
+    </CollapsibleSection>
   );
 }

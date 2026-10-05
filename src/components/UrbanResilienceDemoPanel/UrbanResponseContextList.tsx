@@ -1,3 +1,4 @@
+import { CollapsibleSection } from "./CollapsibleSection";
 import { formatUrbanRouteStatus } from "../../domain/urbanResilience/formatUrbanRouteStatus";
 import type { UrbanResourceSite, UrbanResponseRoute } from "../../types/urbanResilience";
 
@@ -8,12 +9,12 @@ interface UrbanResponseContextListProps {
 
 export function UrbanResponseContextList({ routes, resources }: UrbanResponseContextListProps) {
   return (
-    <section
-      className="urban-resilience-demo-section urban-response-context"
-      aria-labelledby="urban-response-context-title"
+    <CollapsibleSection
+      id="urban-response-context-title"
+      title="Response context"
+      defaultOpen
+      className="urban-response-context"
     >
-      <h2 id="urban-response-context-title">Response context</h2>
-
       {routes.length === 0 && resources.length === 0 ? (
         <p className="urban-resilience-demo-empty-state" role="status">
           Loading response routes and regional staging references...
@@ -37,19 +38,25 @@ export function UrbanResponseContextList({ routes, resources }: UrbanResponseCon
             ))}
           </dl>
 
-          <h3 className="urban-response-subheading">
-            Regional staging references ({resources.length})
-          </h3>
-          <dl className="urban-response-details">
-            {resources.map((resource) => (
-              <div key={resource.id}>
-                <dt>{resource.name}</dt>
-                <dd>
-                  <span>{resource.description}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {/* Starts collapsed: each entry repeats the same caveat, and the
+              section's note below (always visible) already states it. */}
+          <details className="urban-subcollapsible urban-response-staging">
+            <summary className="urban-subcollapsible-summary">
+              <h3 className="urban-response-subheading">
+                Regional staging references ({resources.length})
+              </h3>
+            </summary>
+            <dl className="urban-response-details">
+              {resources.map((resource) => (
+                <div key={resource.id}>
+                  <dt>{resource.name}</dt>
+                  <dd>
+                    <span>{resource.description}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </details>
         </>
       )}
 
@@ -59,6 +66,6 @@ export function UrbanResponseContextList({ routes, resources }: UrbanResponseCon
         history, not live road-condition data. Staging references are
         approximate town centers, not official shelters.
       </p>
-    </section>
+    </CollapsibleSection>
   );
 }

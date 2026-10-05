@@ -79,6 +79,20 @@ Once you've seen the app run, read in this order:
 Everything past this point in this guide is a summary; those five documents
 are the actual source of truth.
 
+## The urban panel's layout
+
+The urban resilience panel is a fixed header and red disclaimer followed by six
+sections: Study area & scenario, Data layers, Selected feature, Response
+context, Data sources & provenance, and Research & experimental. The first four
+start open and the last two start collapsed. Each section is a native
+`<details>` element (`CollapsibleSection.tsx`). A safety note must stay visible
+whenever the content it qualifies is visible, so do not move one into a
+collapsed section unless that content is in the same section.
+
+After changing the panel, run
+[`docs/urban-resilience-panel-regression-checklist.md`](../urban-resilience-panel-regression-checklist.md)
+by hand; the repo has no UI test runner.
+
 ## Architecture in one page
 
 ```
