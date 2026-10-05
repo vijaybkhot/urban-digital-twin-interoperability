@@ -459,7 +459,7 @@ this optional layer.
 | # | Issue | Affects | Tracked in |
 | --- | --- | --- | --- |
 | 1 | No domain-side parser for FEMA flood-zone attributes (documented in the registry, not closed) | Layer 2 | #115 (HO-18) |
-| 2 | Duplicated ground-elevation detail component (two owners, one lookup) | Layer 5 | #117 (HO-20) |
+| 2 | Duplicated ground-elevation detail component (two owners, one lookup) — **resolved**: rendered once by `UrbanSelectedFeatureSection` | Layer 5 | #117 (HO-20), closed |
 | 3 | Pinned elevation-sample identity breaks on property/facility regeneration | Layers 4, 5 | #107 (HO-10) |
 | 4 | Live open research question: no segment yet fully evaluated | Layer 6 | #67 |
 

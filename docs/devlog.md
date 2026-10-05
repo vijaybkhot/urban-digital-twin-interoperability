@@ -1,5 +1,22 @@
 # Devlog
 
+## 2026-10-08
+
+- Added the continuation roadmap, `docs/handoff/continuation-roadmap.md`
+  (#120, HO-23), linked from `ROADMAP.md`. It opens with Vijay's note on what
+  to do next (research Scenario A, gather its data, and build a demo of it),
+  then lists remaining work in four groups (research direction, data and
+  reproducibility, architecture and code, open-source maintenance), each item
+  with a status label, rationale, dependency, and issue link. The research-gap
+  question is marked as a decision for the advisor and continuing researcher.
+  Ideas from the closed July modular-demo issues (#34, #22, #23, #26) are kept
+  under "Paused work".
+- Added "Keep Cesium-facing objects stable" to the extension guide: the
+  re-render pattern found independently in #34 and in the layer-registry
+  design.
+- Marked the duplicated ground-elevation component as resolved (HO-20) in the
+  layers doc's known-issues table.
+
 ## 2026-10-07
 
 - Added `docs/research/scenario-mapping.md` (#119, HO-22). It maps the

@@ -283,6 +283,26 @@ are the closest examples.
    the mode table in `docs/handoff/onboarding.md`, and any data in
    `docs/data/data-register.md`.
 
+## Keep Cesium-facing objects stable
+
+`CesiumScene` effects run when the identity of their inputs changes, not
+their contents. If a config object, scenario, or visibility record is rebuilt
+on every render, the adapter clears and redraws the layer, and may refetch
+its GeoJSON, even though nothing meaningful changed.
+
+- Hold scenario data in `useState` and derive viewer config with `useMemo`
+  (as `AppShell` does for `urbanScenario` and `urbanViewerConfig`).
+- Build records such as the layer-visibility state from a shared default
+  (`defaultUrbanLayerVisibility`), never as an object literal inline in JSX.
+- When live runtime status changes (an event, a selection), update that state
+  alone; do not rebuild the whole viewer config from it.
+- When several entities share a derived status, decide whether it is
+  per-entity or aggregated, and compute aggregates from live entity state
+  instead of mutating a shared field.
+
+This bug class has been found twice independently: in the modular demo
+(closed issue #34) and while designing the urban layer registry (HO-18/HO-19).
+
 ## The ADR-first pattern
 
 The two scenario ADRs show what a research guardrail looks like before any
