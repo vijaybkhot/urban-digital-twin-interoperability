@@ -19,6 +19,12 @@ import { createUrbanResilienceViewerConfig } from "../domain/urbanResilience/cre
 import { grandIslePortFourchonScenario } from "../domain/urbanResilience/grandIslePortFourchonScenario";
 import { loadUrbanGroundElevationSample } from "../domain/urbanResilience/loadUrbanGroundElevationSample";
 import { parseUrbanResponseContext } from "../domain/urbanResilience/parseUrbanResponseContext";
+import {
+  defaultUrbanLayerVisibility,
+  resolveUrbanLayerDataUrl,
+  type UrbanLayerId,
+  type UrbanLayerVisibility,
+} from "../domain/urbanResilience/urbanResilienceLayerRegistry";
 import { UrbanResilienceDemoPanel } from "../components/UrbanResilienceDemoPanel/UrbanResilienceDemoPanel";
 import type {
   ModularCameraTarget,
@@ -104,10 +110,12 @@ export function AppShell() {
     useState<SelectedUrbanLa1FemaSegment | null>(null);
   const [selectedUrbanFacility, setSelectedUrbanFacility] =
     useState<SelectedUrbanFacility | null>(null);
-  const [urbanLa1FemaExperimentEnabled, setUrbanLa1FemaExperimentEnabled] =
-    useState(false);
-  const [urbanFacilityExperimentEnabled, setUrbanFacilityExperimentEnabled] =
-    useState(false);
+  // Single source of truth for every urban layer's on/off state, seeded from
+  // the layer registry (HO-18/HO-19) instead of one hand-written boolean per
+  // layer. Reproduces today's actual defaults exactly: buildings on, flood
+  // on, routes on, both experiments off, 3D context off.
+  const [urbanLayerVisibility, setUrbanLayerVisibility] =
+    useState<UrbanLayerVisibility>(defaultUrbanLayerVisibility);
   const [modularScenario, setModularScenario] = useState(
     mockModularHousingScenario,
   );
@@ -241,9 +249,8 @@ export function AppShell() {
   const openExistingDemo = useCallback(async () => {
     const navigationVersion = navigationVersionRef.current + 1;
     navigationVersionRef.current = navigationVersion;
-    setUrbanLa1FemaExperimentEnabled(false);
+    setUrbanLayerVisibility(defaultUrbanLayerVisibility);
     setSelectedUrbanLa1FemaSegment(null);
-    setUrbanFacilityExperimentEnabled(false);
     setSelectedUrbanFacility(null);
 
     try {
@@ -277,8 +284,7 @@ export function AppShell() {
     setSelectedUrbanProperty(null);
     setSelectedUrbanLa1FemaSegment(null);
     setSelectedUrbanFacility(null);
-    setUrbanLa1FemaExperimentEnabled(false);
-    setUrbanFacilityExperimentEnabled(false);
+    setUrbanLayerVisibility(defaultUrbanLayerVisibility);
     setModularFocusRequest(null);
     setDisasterFocusRequest(null);
     setUrbanFocusRequest(null);
@@ -296,8 +302,7 @@ export function AppShell() {
     setSelectedUrbanProperty(null);
     setSelectedUrbanLa1FemaSegment(null);
     setSelectedUrbanFacility(null);
-    setUrbanLa1FemaExperimentEnabled(false);
-    setUrbanFacilityExperimentEnabled(false);
+    setUrbanLayerVisibility(defaultUrbanLayerVisibility);
     setDisasterFocusRequest(null);
     setUrbanFocusRequest(null);
     setModularFocusRequest((currentRequest) => ({
@@ -318,8 +323,7 @@ export function AppShell() {
     setSelectedUrbanProperty(null);
     setSelectedUrbanLa1FemaSegment(null);
     setSelectedUrbanFacility(null);
-    setUrbanLa1FemaExperimentEnabled(false);
-    setUrbanFacilityExperimentEnabled(false);
+    setUrbanLayerVisibility(defaultUrbanLayerVisibility);
     setModularFocusRequest(null);
     setUrbanFocusRequest(null);
     setDisasterScenario(mockDisasterResilienceScenario);
@@ -343,8 +347,7 @@ export function AppShell() {
     setSelectedUrbanProperty(null);
     setSelectedUrbanLa1FemaSegment(null);
     setSelectedUrbanFacility(null);
-    setUrbanLa1FemaExperimentEnabled(false);
-    setUrbanFacilityExperimentEnabled(false);
+    setUrbanLayerVisibility(defaultUrbanLayerVisibility);
     setModularFocusRequest(null);
     setDisasterFocusRequest(null);
     setDisasterScenario(mockDisasterResilienceScenario);
@@ -502,6 +505,27 @@ export function AppShell() {
     [selectedUrbanProperty],
   );
 
+  // Single handler for every urban layer toggle (registry-backed, HO-19),
+  // replacing the two hand-written per-layer callbacks this used to be.
+  // Clears the matching selection when an experimental layer is turned off,
+  // same as before.
+  const handleUrbanLayerVisibilityChange = useCallback(
+    (layerId: UrbanLayerId, enabled: boolean) => {
+      setUrbanLayerVisibility((current) => ({ ...current, [layerId]: enabled }));
+
+      if (enabled) {
+        return;
+      }
+
+      if (layerId === "la1-fema-experiment") {
+        setSelectedUrbanLa1FemaSegment(null);
+      } else if (layerId === "community-facilities") {
+        setSelectedUrbanFacility(null);
+      }
+    },
+    [],
+  );
+
   const applyModularAction = useCallback(
     (actionId: ModularStatusActionId, moduleId: string) => {
       setModularScenario((currentScenario) =>
@@ -581,17 +605,20 @@ export function AppShell() {
             mode === "urban-resilience-demo" ? urbanScenario : null
           }
           urbanLa1FemaExperimentDataUrl={
-            mode === "urban-resilience-demo" && urbanLa1FemaExperimentEnabled
-              ? urbanScenario.experimentalLa1FemaDataUrl
+            mode === "urban-resilience-demo" &&
+            urbanLayerVisibility["la1-fema-experiment"]
+              ? resolveUrbanLayerDataUrl("la1-fema-experiment", urbanScenario)
               : null
           }
           urbanFacilityExperimentDataUrl={
-            mode === "urban-resilience-demo" && urbanFacilityExperimentEnabled
-              ? urbanScenario.experimentalFacilityDataUrl
+            mode === "urban-resilience-demo" &&
+            urbanLayerVisibility["community-facilities"]
+              ? resolveUrbanLayerDataUrl("community-facilities", urbanScenario)
               : null
           }
           urbanResponseRoutesVisible={
-            mode !== "urban-resilience-demo" || !urbanLa1FemaExperimentEnabled
+            mode !== "urban-resilience-demo" ||
+            urbanLayerVisibility["response-routes"]
           }
           urbanElevationSampledPropertyIds={
             mode === "urban-resilience-demo"
@@ -763,27 +790,13 @@ export function AppShell() {
           selectedProperty={selectedUrbanProperty}
           selectedLa1FemaSegment={selectedUrbanLa1FemaSegment}
           selectedFacility={selectedUrbanFacility}
-          la1FemaExperimentEnabled={urbanLa1FemaExperimentEnabled}
-          facilityExperimentEnabled={urbanFacilityExperimentEnabled}
+          layerVisibility={urbanLayerVisibility}
           ionTokenConfigured={hasCesiumIonAccessToken()}
           osmBuildingsEnabled={isUrbanOsmBuildingsEnabled()}
           isCollapsed={isUrbanPanelCollapsed}
           onCollapsedChange={setIsUrbanPanelCollapsed}
           onFocusTarget={focusUrbanTarget}
-          onLa1FemaExperimentEnabledChange={(enabled) => {
-            setUrbanLa1FemaExperimentEnabled(enabled);
-
-            if (!enabled) {
-              setSelectedUrbanLa1FemaSegment(null);
-            }
-          }}
-          onFacilityExperimentEnabledChange={(enabled) => {
-            setUrbanFacilityExperimentEnabled(enabled);
-
-            if (!enabled) {
-              setSelectedUrbanFacility(null);
-            }
-          }}
+          onLayerVisibilityChange={handleUrbanLayerVisibilityChange}
         />
       ) : (
         <>

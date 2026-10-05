@@ -10,7 +10,6 @@ interface UrbanFacilityExperimentPanelProps {
   selectedFacility: SelectedUrbanFacility | null;
   groundElevationLookupStatus: UrbanGroundElevationLookupStatus;
   groundElevation?: UrbanGroundElevationAttributes;
-  onEnabledChange: (enabled: boolean) => void;
 }
 
 function formatCoverageStatus(value: string): string {
@@ -37,7 +36,6 @@ export function UrbanFacilityExperimentPanel({
   selectedFacility,
   groundElevationLookupStatus,
   groundElevation,
-  onEnabledChange,
 }: UrbanFacilityExperimentPanelProps) {
   const attributes = selectedFacility?.attributes;
 
@@ -49,20 +47,7 @@ export function UrbanFacilityExperimentPanel({
       <h2 id="urban-facility-experiment-title">
         Community/public-safety facilities
       </h2>
-      <button
-        className={`panel-button urban-facility-experiment-toggle ${enabled ? "is-enabled" : ""}`}
-        type="button"
-        aria-pressed={enabled}
-        onClick={() => onEnabledChange(!enabled)}
-      >
-        Optional facility layer: {enabled ? "On" : "Off"}
-      </button>
 
-      <p className="urban-facility-experiment-safety" role="note">
-        This layer describes OSM facility locations and mapped FEMA relationships
-        only. It does not report operations, availability, safety, vulnerability,
-        criticality, or emergency-service availability.
-      </p>
       <p className="urban-facility-experiment-note">
         Four reviewed OSM records are available in the facility-specific Grand
         Isle window. Port Fourchon returned zero matching OSM records; absence

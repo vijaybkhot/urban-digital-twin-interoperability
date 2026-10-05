@@ -4,6 +4,10 @@ import {
   type UrbanGroundElevationLookupStatus,
 } from "../../domain/urbanResilience/loadUrbanGroundElevationSample";
 import type {
+  UrbanLayerId,
+  UrbanLayerVisibility,
+} from "../../domain/urbanResilience/urbanResilienceLayerRegistry";
+import type {
   UrbanCameraTarget,
   UrbanGroundElevationAttributes,
   UrbanResilienceScenario,
@@ -24,15 +28,13 @@ interface UrbanResilienceDemoPanelProps {
   selectedProperty: SelectedUrbanProperty | null;
   selectedLa1FemaSegment: SelectedUrbanLa1FemaSegment | null;
   selectedFacility: SelectedUrbanFacility | null;
-  la1FemaExperimentEnabled: boolean;
-  facilityExperimentEnabled: boolean;
+  layerVisibility: UrbanLayerVisibility;
   ionTokenConfigured: boolean;
   osmBuildingsEnabled: boolean;
   isCollapsed: boolean;
   onCollapsedChange: (collapsed: boolean) => void;
   onFocusTarget: (target: UrbanCameraTarget) => void;
-  onLa1FemaExperimentEnabledChange: (enabled: boolean) => void;
-  onFacilityExperimentEnabledChange: (enabled: boolean) => void;
+  onLayerVisibilityChange: (layerId: UrbanLayerId, enabled: boolean) => void;
 }
 
 function formatCoordinate(value: number): string {
@@ -49,15 +51,13 @@ export function UrbanResilienceDemoPanel({
   selectedProperty,
   selectedLa1FemaSegment,
   selectedFacility,
-  la1FemaExperimentEnabled,
-  facilityExperimentEnabled,
+  layerVisibility,
   ionTokenConfigured,
   osmBuildingsEnabled,
   isCollapsed,
   onCollapsedChange,
   onFocusTarget,
-  onLa1FemaExperimentEnabledChange,
-  onFacilityExperimentEnabledChange,
+  onLayerVisibilityChange,
 }: UrbanResilienceDemoPanelProps) {
   const [groundElevationLookup, setGroundElevationLookup] =
     useState<UrbanGroundElevationLookupState>({
@@ -197,23 +197,94 @@ export function UrbanResilienceDemoPanel({
         groundElevation={selectedPropertyGroundElevation}
       />
 
+      <section
+        className="urban-resilience-demo-section urban-data-layers"
+        aria-labelledby="urban-data-layers-title"
+      >
+        <h2 id="urban-data-layers-title">Data layers</h2>
+
+        <div className="urban-data-layer-toggle">
+          <button
+            className="panel-button urban-response-routes-toggle"
+            type="button"
+            aria-pressed={layerVisibility["response-routes"]}
+            onClick={() =>
+              onLayerVisibilityChange(
+                "response-routes",
+                !layerVisibility["response-routes"],
+              )
+            }
+          >
+            Response routes: {layerVisibility["response-routes"] ? "On" : "Off"}
+          </button>
+        </div>
+
+        <div className="urban-data-layer-toggle">
+          <button
+            className={`panel-button urban-facility-experiment-toggle ${
+              layerVisibility["community-facilities"] ? "is-enabled" : ""
+            }`}
+            type="button"
+            aria-pressed={layerVisibility["community-facilities"]}
+            onClick={() =>
+              onLayerVisibilityChange(
+                "community-facilities",
+                !layerVisibility["community-facilities"],
+              )
+            }
+          >
+            Optional facility layer: {layerVisibility["community-facilities"] ? "On" : "Off"}
+          </button>
+          <p className="urban-facility-experiment-safety" role="note">
+            This layer describes OSM facility locations and mapped FEMA relationships
+            only. It does not report operations, availability, safety, vulnerability,
+            criticality, or emergency-service availability.
+          </p>
+        </div>
+
+        <div className="urban-data-layer-toggle">
+          <button
+            className={`panel-button urban-la1-experiment-toggle ${
+              layerVisibility["la1-fema-experiment"] ? "is-enabled" : ""
+            }`}
+            type="button"
+            aria-pressed={layerVisibility["la1-fema-experiment"]}
+            onClick={() =>
+              onLayerVisibilityChange(
+                "la1-fema-experiment",
+                !layerVisibility["la1-fema-experiment"],
+              )
+            }
+          >
+            Experimental layer: {layerVisibility["la1-fema-experiment"] ? "On" : "Off"}
+          </button>
+          <p className="urban-la1-experiment-safety" role="note">
+            Line styling represents FEMA data relationships only—not current flooding,
+            closure, passability, evacuation suitability, or road safety.
+          </p>
+          <p className="urban-la1-experiment-layer-note">
+            The experimental layer draws the original OpenStreetMap LA-1 ways.
+            The simplified purple response routes are controlled separately,
+            above.
+          </p>
+        </div>
+      </section>
+
       <UrbanLa1FemaExperimentPanel
-        enabled={la1FemaExperimentEnabled}
+        enabled={layerVisibility["la1-fema-experiment"]}
         selectedSegment={selectedLa1FemaSegment}
-        onEnabledChange={onLa1FemaExperimentEnabledChange}
       />
 
       <UrbanFacilityExperimentPanel
-        enabled={facilityExperimentEnabled}
+        enabled={layerVisibility["community-facilities"]}
         selectedFacility={selectedFacility}
         groundElevationLookupStatus={groundElevationLookup.status}
         groundElevation={selectedFacilityGroundElevation}
-        onEnabledChange={onFacilityExperimentEnabledChange}
       />
 
       <UrbanResponseContextList routes={scenario.routes} resources={scenario.resources} />
 
-      <UrbanMapLegend />
+      <UrbanMapLegend visibility={layerVisibility} />
 
       <section
         className="urban-resilience-demo-section urban-data-attribution"

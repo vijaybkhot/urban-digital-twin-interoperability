@@ -4,7 +4,6 @@ import type { SelectedUrbanLa1FemaSegment } from "../../types/urbanResilience";
 interface UrbanLa1FemaExperimentPanelProps {
   enabled: boolean;
   selectedSegment: SelectedUrbanLa1FemaSegment | null;
-  onEnabledChange: (enabled: boolean) => void;
 }
 
 function formatCoverageStatus(value: string): string {
@@ -25,7 +24,6 @@ function formatMappedOverlap(value: boolean | null): string {
 export function UrbanLa1FemaExperimentPanel({
   enabled,
   selectedSegment,
-  onEnabledChange,
 }: UrbanLa1FemaExperimentPanelProps) {
   const attributes = selectedSegment?.attributes;
 
@@ -35,24 +33,6 @@ export function UrbanLa1FemaExperimentPanel({
       aria-labelledby="urban-la1-experiment-title"
     >
       <h2 id="urban-la1-experiment-title">Experimental LA-1/FEMA inspection</h2>
-      <button
-        className={`panel-button urban-la1-experiment-toggle ${enabled ? "is-enabled" : ""}`}
-        type="button"
-        aria-pressed={enabled}
-        onClick={() => onEnabledChange(!enabled)}
-      >
-        Experimental layer: {enabled ? "On" : "Off"}
-      </button>
-
-      <p className="urban-la1-experiment-safety" role="note">
-        Line styling represents FEMA data relationships only—not current flooding,
-        closure, passability, evacuation suitability, or road safety.
-      </p>
-      <p className="urban-la1-experiment-layer-note">
-        {enabled
-          ? "The experimental OSM-way layer is visible; the simplified purple response routes are hidden."
-          : "The simplified purple response routes are visible; the experimental OSM-way layer is hidden."}
-      </p>
 
       {enabled && (
         <div className="urban-la1-experiment-legend" aria-label="Experimental LA-1 legend">

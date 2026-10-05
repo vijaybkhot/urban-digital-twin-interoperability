@@ -21,8 +21,8 @@ prop (`src/app/AppShell.tsx`) → `CesiumScene` effect
 | --- | --- | --- | --- | --- | --- | --- |
 | 1. Buildings / Properties | Implemented, core | Yes | Always on | No | Yes | Rows 1–5, 9 |
 | 2. FEMA Flood Hazard | Implemented, core | Yes | Always on | No | **No** | Row 6 |
-| 3. Response Routes & Staging Resources | Implemented, core | Yes | On | **Coupled to layer 6's toggle — see note below** | No | Rows 7–8 |
-| 4. Community/Public-Safety Facilities | Experimental | Yes | Off | Yes | Yes | **Missing — known issue** |
+| 3. Response Routes & Staging Resources | Implemented, core | Yes | On | Yes (routes only) | No | Rows 7–8 |
+| 4. Community/Public-Safety Facilities | Experimental | Yes | Off | Yes | Yes | Rows 10–11 (shown only when on) |
 | 5. Ground Elevation Sample | Experimental | **No — React only** | Always loaded | No | n/a | n/a |
 | 6. Experimental LA-1/FEMA Segments | Experimental | Yes | Off | Yes | Yes | Inline 3-row line legend only (not in the main legend) |
 | 7. Optional Cesium OSM Buildings (3D context) | Optional | Yes (3D Tileset) | Env-var gated | **No in-app toggle** | No | n/a |
@@ -125,9 +125,10 @@ it is not used to drive extrusion height.
 declares a `UrbanFloodZoneAttributes` interface, but it is **never imported
 anywhere in `src/`.** The styler reads the raw `Record<string, unknown>`
 directly instead of going through a typed parser. This is the one layer in
-the entire mode with an unvalidated data path. Tracked in Issue #115
-(HO-18), which is expected to either add the missing parser or document an
-explicit, deliberate exemption.
+the entire mode with an unvalidated data path. Issue #115
+(HO-18) documented this as a deliberate, recorded gap in the layer registry
+(`flood-hazard` is `selectable: false`, with a comment explaining why); the
+parser itself has not been added.
 
 **Visibility control.** Always on — no toggle.
 
@@ -152,7 +153,7 @@ for the confirmed zone codes and the `-9999` BFE sentinel value to watch for.
 
 ## 3. Response Routes & Staging Resources
 
-**Classification: IMPLEMENTED, core layer — with a known visibility bug.**
+**Classification: IMPLEMENTED, core layer.**
 Two illustrative LA-1 evacuation routes (purple lines) and three regional
 staging-reference points (blue dots).
 
@@ -192,27 +193,36 @@ existence — the entities are always created) is controlled by
 
 ```
 urbanResponseRoutesVisible={
-  mode !== "urban-resilience-demo" || !urbanLa1FemaExperimentEnabled
+  mode !== "urban-resilience-demo" ||
+  urbanLayerVisibility["response-routes"]
 }
 ```
 
-**Enabling the experimental LA-1/FEMA layer (layer 6, below) currently hides
-the response routes.** This is **intentional original design**, not a
-defect — the two layers were built as an either/or presentation of the same
-corridor: the purple route is a simple, hand-simplified illustrative path,
-while the experimental layer traces the real OpenStreetMap road geometry
-segment by segment. Issue #116 (HO-19) is not a bug fix; it gives routes
-their own independent toggle in the planned layer registry so the two layers
-can be shown together or separately, as a clarity improvement to this
-existing behavior. Staging-resource points are **not** affected either way —
-only route polylines are gated by `urbanResponseRoutesVisible`
-(`CesiumViewerAdapter.ts:444-448`, `setUrbanResponseRoutesVisible`).
+`urbanLayerVisibility` is the single registry-seeded visibility record in
+`AppShell.tsx` (see `src/domain/urbanResilience/urbanResilienceLayerRegistry.ts`).
+Routes have their **own independent toggle** — "Response routes: On/Off" in
+the panel's "Data layers" section — and default to on.
+
+*History:* until Issue #116 (HO-19), enabling the experimental LA-1/FEMA
+layer (layer 6) also hid the response routes. That was intentional original
+design, not a defect: the two were built as an either/or presentation of
+the same corridor — the purple route is a hand-simplified illustrative
+path, while the experimental layer traces the real OpenStreetMap road
+geometry segment by segment. HO-19 decoupled them so both can be shown
+together or separately.
+
+Staging-resource points are **not** affected by the toggle — only route
+polylines are gated by `urbanResponseRoutesVisible`
+(`setUrbanResponseRoutesVisible` in `CesiumViewerAdapter.ts`). One known
+edge case follows: with routes turned off, the staging points stay on the
+map while their legend row hides, because the registry groups routes and
+staging resources as one layer.
 
 **Selectable.** No — neither routes nor resources carry an `entityType` tag
 or appear in the `ViewerSelection` union. They are informational only.
 
-**Legend.** Row 7 ("Regional staging reference") and row 8 ("LA-1 response
-route") in `UrbanMapLegend.tsx`.
+**Legend.** "Regional staging reference" and "LA-1 response route" rows,
+rendered from the registry and shown while the routes toggle is on.
 
 **Interpretation limits.** Both routes' `status: "at-risk"` is a hardcoded,
 hand-assigned research judgment, not derived from live road-condition data.
@@ -224,7 +234,7 @@ the full route-construction method and anchor coordinates.
 
 ## 4. Community/Public-Safety Facilities (Experimental)
 
-**Classification: EXPERIMENTAL — with a missing legend, tracked to fix.**
+**Classification: EXPERIMENTAL.**
 Four real OSM-derived facility records near Grand Isle (fire station,
 police, town hall, school), each carrying a conservative FEMA-relationship
 classification.
@@ -242,18 +252,18 @@ graphic set explicitly to `HeightReference.NONE`).
 **Styler.** `src/cesium/styleUrbanFacilityDataSource.ts`
 (`styleUrbanFacilityDataSource`). Colors by `facility_category`: cyan
 `#06b6d4` for `public-safety`, purple `#a855f7` for `community`, yellow
-`#fef08a` when selected. **These three hex values are hardcoded directly in
-this file** rather than imported from `src/theme/urbanResilienceVisualTokens.ts`
-— the one styler in the mode that bypasses the shared token file. Tracked
-for consolidation in Issue #113 (HO-16).
+`#fef08a` when selected — all three imported from
+`src/theme/urbanResilienceVisualTokens.ts` (`facilityPublicSafety`,
+`facilityCommunity`, `selectedPropertyOutline`) since Issue #113 (HO-16).
 
 **Domain parser.** `src/domain/urbanResilience/parseUrbanFacilityAttributes.ts`
 (`parseUrbanFacilityAttributes`).
 
-**Visibility control.** Explicit boolean toggle,
-`urbanFacilityExperimentEnabled` state in `AppShell.tsx`, surfaced as the
-"Optional facility layer: On/Off" button in
-`UrbanFacilityExperimentPanel.tsx`. Defaults to **off**.
+**Visibility control.** Explicit toggle,
+`urbanLayerVisibility["community-facilities"]` in `AppShell.tsx`, surfaced
+as the "Optional facility layer: On/Off" button in the panel's "Data
+layers" section, with the layer's safety note directly beside it. Defaults
+to **off**.
 
 **Selectable.** Yes — `entityType: "urbanFacility"`, one of the 8
 `ViewerSelection` variants. Selecting a facility drives the facility
@@ -261,12 +271,9 @@ inspector in `UrbanFacilityExperimentPanel.tsx` and (all 4 sampled
 facilities are in the pinned elevation manifest) the ground-elevation detail
 (layer 5).
 
-**Legend. ⚠️ Known issue: missing.** `UrbanMapLegend.tsx` has no entry for
-either facility color, even though `UrbanFacilityExperimentPanel.tsx`
-explicitly instructs the user to *"Click a cyan public-safety or purple
-community marker"* — the legend currently contradicts that instruction by
-omission. Tracked to fix in Issue #113 (HO-16), alongside the token-file
-consolidation above.
+**Legend.** "Public-safety facility" (cyan) and "Community facility"
+(purple) rows, added by Issue #113 (HO-16) and rendered from the registry
+since Issue #116 (HO-19) — shown only while the facility layer is on.
 
 **Interpretation limits.** All 4 sampled facilities are in Grand Isle; Port
 Fourchon returned zero matching OSM records — the panel and the committed
@@ -366,13 +373,12 @@ Selected segments get a white outline and thicker width (7 px vs. 3–4 px).
 **Domain parser.** `src/domain/urbanResilience/parseUrbanLa1FemaSegment.ts`
 (`parseUrbanLa1FemaSegmentAttributes`).
 
-**Visibility control.** Explicit boolean toggle,
-`urbanLa1FemaExperimentEnabled` state in `AppShell.tsx`, surfaced as the
-"Experimental layer: On/Off" button in
-`UrbanLa1FemaExperimentPanel.tsx`. Defaults to **off**. **Enabling this
-toggle currently also hides the response routes (layer 3), by original
-design** — see layer 3's note above. Issue #116 (HO-19) will give each layer
-its own independent toggle so they can be shown together.
+**Visibility control.** Explicit toggle,
+`urbanLayerVisibility["la1-fema-experiment"]` in `AppShell.tsx`, surfaced
+as the "Experimental layer: On/Off" button in the panel's "Data layers"
+section, with the layer's safety note directly beside it. Defaults to
+**off**. Independent of the response routes since Issue #116 (HO-19) — see
+layer 3's history note.
 
 **Selectable.** Yes — `entityType: "urbanLa1FemaSegment"`, one of the 8
 `ViewerSelection` variants. Selecting a segment drives the 13-field
@@ -452,12 +458,10 @@ this optional layer.
 
 | # | Issue | Affects | Tracked in |
 | --- | --- | --- | --- |
-| 1 | No domain-side parser for FEMA flood-zone attributes | Layer 2 | #115 (HO-18) |
-| 2 | Enabling the LA-1/FEMA experiment silently hides response routes | Layers 3, 6 | #116 (HO-19) |
-| 3 | Facility colors hardcoded outside the token file; missing from the legend | Layer 4 | #113 (HO-16) |
-| 4 | Duplicated ground-elevation detail component (two owners, one lookup) | Layer 5 | #117 (HO-20) |
-| 5 | Pinned elevation-sample identity breaks on property/facility regeneration | Layers 4, 5 | #107 (HO-10) |
-| 6 | Live open research question: no segment yet fully evaluated | Layer 6 | #67 |
+| 1 | No domain-side parser for FEMA flood-zone attributes (documented in the registry, not closed) | Layer 2 | #115 (HO-18) |
+| 2 | Duplicated ground-elevation detail component (two owners, one lookup) | Layer 5 | #117 (HO-20) |
+| 3 | Pinned elevation-sample identity breaks on property/facility regeneration | Layers 4, 5 | #107 (HO-10) |
+| 4 | Live open research question: no segment yet fully evaluated | Layer 6 | #67 |
 
 ## See also
 

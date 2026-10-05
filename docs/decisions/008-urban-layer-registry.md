@@ -63,8 +63,21 @@ names, and it can be reviewed as a static design artifact before any
 running code depends on it. Issue #116 (HO-19) is what makes `AppShell`
 actually read layer visibility and data URLs from here instead of from two
 hand-written booleans, including giving the response-routes layer its own
-independent toggle (today's registry marks that layer `toggleable: false`,
-truthfully describing that no such control exists yet).
+independent toggle (the registry originally marked that layer
+`toggleable: false`, truthfully describing that no such control existed
+yet).
+
+> **Addendum (HO-19, same week).** HO-19 landed and flipped
+> `response-routes` to `toggleable: true`, wiring the independent control
+> described above. It also refined `UrbanLegendSwatchSymbol` from the four
+> generic shape names originally landed here (`polygon` / `outline` /
+> `point` / `line`) to the six values that map 1:1 onto
+> `UrbanResilienceDemoPanel.css`'s existing swatch classes (`property` /
+> `selected` / `flood` / `resource` / `route` / `facility`), since the
+> original four were too coarse to reproduce the legend's actual CSS
+> without inventing new classes. Both are refinements of this still-inert
+> (at the time) registry ahead of its first real consumer, not a reversal
+> of this ADR's decision.
 
 Two known compromises, recorded rather than worked around:
 
