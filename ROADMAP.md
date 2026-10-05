@@ -12,6 +12,14 @@ Status labels in this document mean:
   application path.
 - **Planned** — not implemented in this repository.
 
+## Continuation after the September 2026 handoff
+
+The current work queue (research direction, data and reproducibility,
+architecture, and open-source maintenance, each with status, rationale,
+dependency, and issue link) is in the
+[continuation roadmap](docs/handoff/continuation-roadmap.md). The POC sections
+below record how the prototype was built, in historical order.
+
 ## POC 0: Existing Cesium decision-support viewer
 
 **Implemented prototype**
@@ -130,10 +138,13 @@ for the full history.
 
 ## Longer-term research directions
 
+Each item is **Planned**. Items with an active research thread or issue are
+detailed in the [continuation roadmap](docs/handoff/continuation-roadmap.md).
+
 - Provider-backed agent assistance that outputs validated structured state.
 - Real reconstruction-provider integration and durable project provenance.
 - More rigorous building/FEMA spatial-association comparisons.
-- Broader verified FEMA coverage along selected LA-1 study corridors.
+- Broader verified FEMA coverage along selected LA-1 study corridors (#67).
 - Portable scenario and data contracts for additional viewer clients.
 - **Planned** — the four proposed scenarios (A1 event-specific property
   exposure, A2 long-term property exposure, B1 response options, B2
