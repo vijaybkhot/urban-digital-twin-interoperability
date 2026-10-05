@@ -1,17 +1,9 @@
 import { isUrbanRiskLevel } from "../../domain/urbanResilience/urbanResilienceContract";
-import type { UrbanGroundElevationLookupStatus } from "../../domain/urbanResilience/loadUrbanGroundElevationSample";
-import type {
-  SelectedUrbanProperty,
-  UrbanGroundElevationAttributes,
-} from "../../types/urbanResilience";
-import { UrbanGroundElevationDetails } from "./UrbanGroundElevationDetails";
+import type { SelectedUrbanProperty } from "../../types/urbanResilience";
 
 interface UrbanPropertyDashboardProps {
   scenarioName: string;
-  disclaimer: string;
-  selectedProperty: SelectedUrbanProperty | null;
-  groundElevationLookupStatus: UrbanGroundElevationLookupStatus;
-  groundElevation?: UrbanGroundElevationAttributes;
+  selectedProperty: SelectedUrbanProperty;
 }
 
 function displayText(value: unknown): string {
@@ -20,25 +12,8 @@ function displayText(value: unknown): string {
 
 export function UrbanPropertyDashboard({
   scenarioName,
-  disclaimer,
   selectedProperty,
-  groundElevationLookupStatus,
-  groundElevation,
 }: UrbanPropertyDashboardProps) {
-  if (!selectedProperty) {
-    return (
-      <section
-        className="urban-resilience-demo-section urban-property-dashboard"
-        aria-labelledby="urban-property-dashboard-title"
-      >
-        <h2 id="urban-property-dashboard-title">Property dashboard</h2>
-        <p className="urban-resilience-demo-empty-state" role="status">
-          Click a building to view its real-footprint, FEMA-zone-based risk classification.
-        </p>
-      </section>
-    );
-  }
-
   const { attributes } = selectedProperty;
   const riskLevel = isUrbanRiskLevel(attributes.risk_level) ? attributes.risk_level : null;
   const riskClassName = riskLevel
@@ -46,11 +21,14 @@ export function UrbanPropertyDashboard({
     : "urban-property-risk-unknown";
 
   return (
-    <section
-      className="urban-resilience-demo-section urban-property-dashboard"
+    <div
+      className="urban-property-dashboard"
+      role="group"
       aria-labelledby="urban-property-dashboard-title"
     >
-      <h2 id="urban-property-dashboard-title">Property dashboard</h2>
+      <h3 id="urban-property-dashboard-title" className="urban-selected-feature-heading">
+        Property dashboard
+      </h3>
       <div className="urban-property-dashboard-heading" role="status">
         <span>Selected property</span>
         <strong>{displayText(attributes.address_label)}</strong>
@@ -98,15 +76,6 @@ export function UrbanPropertyDashboard({
           <dd>{displayText(attributes.confidence_note)}</dd>
         </div>
       </dl>
-
-      <UrbanGroundElevationDetails
-        lookupStatus={groundElevationLookupStatus}
-        record={groundElevation}
-      />
-
-      <p className="urban-property-dashboard-disclaimer" role="note">
-        {disclaimer}
-      </p>
-    </section>
+    </div>
   );
 }

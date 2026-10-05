@@ -7,6 +7,7 @@ import type {
   UrbanLayerId,
   UrbanLayerVisibility,
 } from "../../domain/urbanResilience/urbanResilienceLayerRegistry";
+import { urbanResilienceVisualColors } from "../../theme/urbanResilienceVisualTokens";
 import type {
   UrbanCameraTarget,
   UrbanGroundElevationAttributes,
@@ -15,11 +16,9 @@ import type {
   SelectedUrbanLa1FemaSegment,
   SelectedUrbanFacility,
 } from "../../types/urbanResilience";
-import { UrbanLa1FemaExperimentPanel } from "./UrbanLa1FemaExperimentPanel";
-import { UrbanFacilityExperimentPanel } from "./UrbanFacilityExperimentPanel";
 import { UrbanMapLegend } from "./UrbanMapLegend";
-import { UrbanPropertyDashboard } from "./UrbanPropertyDashboard";
 import { UrbanResponseContextList } from "./UrbanResponseContextList";
+import { UrbanSelectedFeatureSection } from "./UrbanSelectedFeatureSection";
 import { UrbanTwinEventFeed } from "./UrbanTwinEventFeed";
 import "./UrbanResilienceDemoPanel.css";
 
@@ -189,12 +188,15 @@ export function UrbanResilienceDemoPanel({
         <p className="urban-resilience-demo-copy">{scenario.description}</p>
       </section>
 
-      <UrbanPropertyDashboard
+      <UrbanSelectedFeatureSection
         scenarioName={scenario.name}
-        disclaimer={scenario.disclaimer}
         selectedProperty={selectedProperty}
+        selectedLa1FemaSegment={selectedLa1FemaSegment}
+        selectedFacility={selectedFacility}
+        layerVisibility={layerVisibility}
         groundElevationLookupStatus={groundElevationLookup.status}
-        groundElevation={selectedPropertyGroundElevation}
+        propertyGroundElevation={selectedPropertyGroundElevation}
+        facilityGroundElevation={selectedFacilityGroundElevation}
       />
 
       <section
@@ -240,6 +242,13 @@ export function UrbanResilienceDemoPanel({
             only. It does not report operations, availability, safety, vulnerability,
             criticality, or emergency-service availability.
           </p>
+          {layerVisibility["community-facilities"] && (
+            <p className="urban-facility-experiment-note">
+              Four reviewed OSM records are available in the facility-specific Grand
+              Isle window. Port Fourchon returned zero matching OSM records; absence
+              from OSM does not prove absence of facilities.
+            </p>
+          )}
         </div>
 
         <div className="urban-data-layer-toggle">
@@ -267,20 +276,28 @@ export function UrbanResilienceDemoPanel({
             The simplified purple response routes are controlled separately,
             above.
           </p>
+          {layerVisibility["la1-fema-experiment"] && (
+            <div className="urban-la1-experiment-legend" aria-label="Experimental LA-1 legend">
+              <p>
+                <span
+                  className="urban-la1-line urban-la1-line-intersection"
+                  style={{ borderColor: urbanResilienceVisualColors.route }}
+                  aria-hidden="true"
+                />
+                <strong>Solid purple:</strong> mapped FEMA intersection found
+              </p>
+              <p>
+                <span className="urban-la1-line urban-la1-line-unknown" aria-hidden="true" />
+                <strong>Dashed gray:</strong> FEMA relationship Unknown
+              </p>
+              <p>
+                <span className="urban-la1-line urban-la1-line-no-intersection" aria-hidden="true" />
+                <strong>Thin slate:</strong> evaluated with no mapped intersection
+              </p>
+            </div>
+          )}
         </div>
       </section>
-
-      <UrbanLa1FemaExperimentPanel
-        enabled={layerVisibility["la1-fema-experiment"]}
-        selectedSegment={selectedLa1FemaSegment}
-      />
-
-      <UrbanFacilityExperimentPanel
-        enabled={layerVisibility["community-facilities"]}
-        selectedFacility={selectedFacility}
-        groundElevationLookupStatus={groundElevationLookup.status}
-        groundElevation={selectedFacilityGroundElevation}
-      />
 
       <UrbanResponseContextList routes={scenario.routes} resources={scenario.resources} />
 

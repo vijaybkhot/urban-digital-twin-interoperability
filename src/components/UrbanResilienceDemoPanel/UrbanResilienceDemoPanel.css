@@ -279,17 +279,15 @@
   line-height: 1.45;
 }
 
-.urban-property-dashboard-disclaimer {
-  margin: 12px 0 0;
-  padding: 10px 12px;
-  color: #7f1d1d;
-  background: #fff7ed;
-  border: 1px solid #fdba74;
-  border-left-width: 4px;
-  border-radius: 8px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.45;
+.urban-selected-feature-heading {
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 0.92rem;
+}
+
+.urban-selected-feature-empty {
+  display: grid;
+  gap: 6px;
 }
 
 .urban-data-layer-toggle {
@@ -364,7 +362,7 @@
 }
 
 .urban-la1-line-intersection {
-  /* border-color is set inline in UrbanLa1FemaExperimentPanel.tsx from
+  /* border-color is set inline in UrbanResilienceDemoPanel.tsx from
      urbanResilienceVisualColors.route, the single source of truth shared
      with the Cesium styler -- do not hardcode a color here. */
 }
