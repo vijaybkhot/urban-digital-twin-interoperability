@@ -2,6 +2,19 @@
 
 ## 2026-10-07
 
+- Added `docs/research/scenario-mapping.md` (#119, HO-22). It maps the
+  project's four proposed scenarios (A1 event-specific property exposure, A2
+  long-term property exposure, B1 response options, B2 post-event access and
+  return) through five stages: scenario, required data, processing,
+  digital-twin state, viewer rendering. For each stage it records what exists
+  in the repository and what is missing. All four are PROPOSED; none is
+  implemented. The current FEMA-zone property classification is documented as
+  the implemented baseline, with what A1 could reuse from it. The scenario
+  proposal itself is a separate project document and is not stored here.
+  Linked from `ROADMAP.md`.
+- Noted for A1: it needs a stable building identifier, but `property_id` is
+  assigned in Overpass response order and can shift on re-fetch;
+  `osm_way_id` is the stable key available today.
 - Added the extension guide, `docs/handoff/extending.md` (#111, HO-14), with
   three recipes: add a data layer (traced end to end through the facility
   experiment), update an existing layer's data (regeneration order and the

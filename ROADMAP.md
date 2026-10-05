@@ -135,4 +135,8 @@ for the full history.
 - More rigorous building/FEMA spatial-association comparisons.
 - Broader verified FEMA coverage along selected LA-1 study corridors.
 - Portable scenario and data contracts for additional viewer clients.
+- **Planned** — the four proposed scenarios (A1 event-specific property
+  exposure, A2 long-term property exposure, B1 response options, B2
+  post-event access and return). [Scenario mapping](docs/research/scenario-mapping.md)
+  maps each onto this repository and states what is missing.
 - Secure, auditable interaction among multiple digital twins.
