@@ -2,6 +2,17 @@
 
 ## 2026-10-07
 
+- Added the extension guide, `docs/handoff/extending.md` (#111, HO-14), with
+  three recipes: add a data layer (traced end to end through the facility
+  experiment), update an existing layer's data (regeneration order and the
+  pinned-manifest procedure), and add an application mode. It states the
+  invariants: only `src/cesium/` and `src/adapters/viewer/` import Cesium,
+  scientific processing stays in `scripts/`, every artifact needs provenance
+  and a validator, and new research directions get an ADR first. Linked from
+  onboarding, `CONTRIBUTING.md`, and `docs/architecture.md`.
+- Corrected the onboarding guide's practice exercise: legend labels are
+  defined in the layer registry since HO-19, not in `UrbanMapLegend.tsx`.
+
 - Reordered the docs so the urban-resilience demo is presented first
   (#128, HO-26). `README.md` and `docs/architecture.md` now describe it
   first among the five modes and state that it is the primary research
