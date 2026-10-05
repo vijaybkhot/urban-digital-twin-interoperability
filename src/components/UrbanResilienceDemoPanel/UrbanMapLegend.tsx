@@ -17,10 +17,12 @@ export function UrbanMapLegend({ visibility }: UrbanMapLegendProps) {
 
   return (
     <section
-      className="urban-resilience-demo-section urban-map-legend"
+      className="urban-resilience-demo-subsection urban-map-legend"
       aria-labelledby="urban-map-legend-title"
     >
-      <h2 id="urban-map-legend-title">Map legend</h2>
+      <h3 id="urban-map-legend-title" className="urban-subsection-heading">
+        Map legend
+      </h3>
       <p className="urban-map-legend-note">
         Property colors are a FEMA zone-based classification, not a live hazard feed.
       </p>

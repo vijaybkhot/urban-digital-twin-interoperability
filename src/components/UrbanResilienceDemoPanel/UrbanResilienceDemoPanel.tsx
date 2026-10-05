@@ -16,6 +16,7 @@ import type {
   SelectedUrbanLa1FemaSegment,
   SelectedUrbanFacility,
 } from "../../types/urbanResilience";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { UrbanMapLegend } from "./UrbanMapLegend";
 import { UrbanResponseContextList } from "./UrbanResponseContextList";
 import { UrbanSelectedFeatureSection } from "./UrbanSelectedFeatureSection";
@@ -146,47 +147,187 @@ export function UrbanResilienceDemoPanel({
         {scenario.disclaimer}
       </p>
 
-      <section className="urban-resilience-demo-section">
-        <h2>Camera views</h2>
-        <div className="urban-camera-controls" aria-label="Urban resilience camera views">
-          <button className="panel-button" type="button" onClick={() => onFocusTarget("overall")}>
-            Overall view
-          </button>
-          <button className="panel-button" type="button" onClick={() => onFocusTarget("flood")}>
-            Flood zone view
-          </button>
-          <button
-            className="panel-button"
-            type="button"
-            disabled={!selectedProperty}
-            title={selectedProperty ? "Focus the selected property" : "Select a property first"}
-            onClick={() => onFocusTarget("selected-property")}
-          >
-            Selected property view
-          </button>
-        </div>
-      </section>
+      <CollapsibleSection id="urban-study-area-title" title="Study area & scenario" defaultOpen>
+        {/* Starts collapsed: name and area repeat the panel title, and the
+            description overlaps "Current prototype scope" below. */}
+        <details className="urban-resilience-demo-subsection urban-subcollapsible">
+          <summary className="urban-subcollapsible-summary">
+            <h3 className="urban-subsection-heading">Scenario</h3>
+          </summary>
+          <dl className="urban-resilience-demo-details">
+            <div>
+              <dt>Name</dt>
+              <dd>{scenario.name}</dd>
+            </div>
+            <div>
+              <dt>Area</dt>
+              <dd>Grand Isle &amp; Port Fourchon, Louisiana</dd>
+            </div>
+            <div>
+              <dt>Center</dt>
+              <dd>
+                {formatCoordinate(scenario.center.lat)}, {formatCoordinate(scenario.center.lon)}
+              </dd>
+            </div>
+          </dl>
+          <p className="urban-resilience-demo-copy">{scenario.description}</p>
+        </details>
+        <section className="urban-resilience-demo-subsection">
+          <h3 className="urban-subsection-heading">Camera views</h3>
+          <div className="urban-camera-controls" aria-label="Urban resilience camera views">
+            <button className="panel-button" type="button" onClick={() => onFocusTarget("overall")}>
+              Overall view
+            </button>
+            <button className="panel-button" type="button" onClick={() => onFocusTarget("flood")}>
+              Flood zone view
+            </button>
+            <button
+              className="panel-button"
+              type="button"
+              disabled={!selectedProperty}
+              title={selectedProperty ? "Focus the selected property" : "Select a property first"}
+              onClick={() => onFocusTarget("selected-property")}
+            >
+              Selected property view
+            </button>
+          </div>
+        </section>
+        <section className="urban-resilience-demo-subsection">
+          <h3 className="urban-subsection-heading">Current prototype scope</h3>
+          <p className="urban-resilience-demo-empty-state">
+            Real OpenStreetMap building footprints and real FEMA National Flood
+            Hazard Layer zone polygons for Grand Isle and Port Fourchon,
+            Louisiana, colored by a zone-based risk classification. Response
+            routes follow real LA Highway 1 road geometry; staging references
+            mark approximate inland town centers along the corridor.
+          </p>
+          <p className="urban-resilience-alignment-note" role="note">
+            This is a research classification, not an official flood
+            determination, insurance requirement, or evacuation order.
+          </p>
+        </section>
+      </CollapsibleSection>
 
-      <section className="urban-resilience-demo-section">
-        <h2>Scenario</h2>
-        <dl className="urban-resilience-demo-details">
-          <div>
-            <dt>Name</dt>
-            <dd>{scenario.name}</dd>
+      <CollapsibleSection id="urban-data-layers-title" title="Data layers" defaultOpen>
+        <UrbanMapLegend visibility={layerVisibility} />
+        <div className="urban-resilience-demo-subsection urban-data-layers">
+          <div className="urban-data-layer-toggle">
+            <button
+              className="panel-button urban-response-routes-toggle"
+              type="button"
+              aria-pressed={layerVisibility["response-routes"]}
+              onClick={() =>
+                onLayerVisibilityChange(
+                  "response-routes",
+                  !layerVisibility["response-routes"],
+                )
+              }
+            >
+              Response routes: {layerVisibility["response-routes"] ? "On" : "Off"}
+            </button>
           </div>
-          <div>
-            <dt>Area</dt>
-            <dd>Grand Isle &amp; Port Fourchon, Louisiana</dd>
+
+          <div className="urban-data-layer-toggle">
+            <button
+              className={`panel-button urban-facility-experiment-toggle ${
+                layerVisibility["community-facilities"] ? "is-enabled" : ""
+              }`}
+              type="button"
+              aria-pressed={layerVisibility["community-facilities"]}
+              onClick={() =>
+                onLayerVisibilityChange(
+                  "community-facilities",
+                  !layerVisibility["community-facilities"],
+                )
+              }
+            >
+              Optional facility layer: {layerVisibility["community-facilities"] ? "On" : "Off"}
+            </button>
+            <p className="urban-facility-experiment-safety" role="note">
+              This layer describes OSM facility locations and mapped FEMA relationships
+              only. It does not report operations, availability, safety, vulnerability,
+              criticality, or emergency-service availability.
+            </p>
+            {layerVisibility["community-facilities"] && (
+              <p className="urban-facility-experiment-note">
+                Four reviewed OSM records are available in the facility-specific Grand
+                Isle window. Port Fourchon returned zero matching OSM records; absence
+                from OSM does not prove absence of facilities.
+              </p>
+            )}
           </div>
-          <div>
-            <dt>Center</dt>
-            <dd>
-              {formatCoordinate(scenario.center.lat)}, {formatCoordinate(scenario.center.lon)}
-            </dd>
+
+          <div className="urban-data-layer-toggle">
+            <button
+              className={`panel-button urban-la1-experiment-toggle ${
+                layerVisibility["la1-fema-experiment"] ? "is-enabled" : ""
+              }`}
+              type="button"
+              aria-pressed={layerVisibility["la1-fema-experiment"]}
+              onClick={() =>
+                onLayerVisibilityChange(
+                  "la1-fema-experiment",
+                  !layerVisibility["la1-fema-experiment"],
+                )
+              }
+            >
+              Experimental layer: {layerVisibility["la1-fema-experiment"] ? "On" : "Off"}
+            </button>
+            <p className="urban-la1-experiment-safety" role="note">
+              Line styling represents FEMA data relationships only—not current flooding,
+              closure, passability, evacuation suitability, or road safety.
+            </p>
+            <p className="urban-la1-experiment-layer-note">
+              The experimental layer draws the original OpenStreetMap LA-1 ways.
+              The simplified purple response routes are controlled separately,
+              above.
+            </p>
+            {layerVisibility["la1-fema-experiment"] && (
+              <div className="urban-la1-experiment-legend" aria-label="Experimental LA-1 legend">
+                <p>
+                  <span
+                    className="urban-la1-line urban-la1-line-intersection"
+                    style={{ borderColor: urbanResilienceVisualColors.route }}
+                    aria-hidden="true"
+                  />
+                  <strong>Solid purple:</strong> mapped FEMA intersection found
+                </p>
+                <p>
+                  <span className="urban-la1-line urban-la1-line-unknown" aria-hidden="true" />
+                  <strong>Dashed gray:</strong> FEMA relationship Unknown
+                </p>
+                <p>
+                  <span className="urban-la1-line urban-la1-line-no-intersection" aria-hidden="true" />
+                  <strong>Thin slate:</strong> evaluated with no mapped intersection
+                </p>
+              </div>
+            )}
           </div>
-        </dl>
-        <p className="urban-resilience-demo-copy">{scenario.description}</p>
-      </section>
+        </div>
+        {/* Shown only when the optional ion 3D context is configured on. In the
+            default (off) state it only restated the legend and offered no action. */}
+        {osmBuildingsEnabled && (
+          <section className="urban-resilience-demo-subsection">
+            <h3 className="urban-subsection-heading">3D context</h3>
+            <p
+              className={`urban-osm-context-status ${
+                ionTokenConfigured
+                  ? "urban-osm-context-status-configured"
+                  : "urban-osm-context-status-unavailable"
+              }`}
+              role="status"
+            >
+              {ionTokenConfigured
+                ? "Additional 3D context: On"
+                : "Additional 3D context is unavailable"}
+            </p>
+            <p className="urban-osm-context-copy">
+              Colored buildings show the FEMA-zone classification. Optional
+              surrounding buildings provide visual context only.
+            </p>
+          </section>
+        )}
+      </CollapsibleSection>
 
       <UrbanSelectedFeatureSection
         scenarioName={scenario.name}
@@ -199,183 +340,67 @@ export function UrbanResilienceDemoPanel({
         facilityGroundElevation={selectedFacilityGroundElevation}
       />
 
-      <section
-        className="urban-resilience-demo-section urban-data-layers"
-        aria-labelledby="urban-data-layers-title"
-      >
-        <h2 id="urban-data-layers-title">Data layers</h2>
-
-        <div className="urban-data-layer-toggle">
-          <button
-            className="panel-button urban-response-routes-toggle"
-            type="button"
-            aria-pressed={layerVisibility["response-routes"]}
-            onClick={() =>
-              onLayerVisibilityChange(
-                "response-routes",
-                !layerVisibility["response-routes"],
-              )
-            }
-          >
-            Response routes: {layerVisibility["response-routes"] ? "On" : "Off"}
-          </button>
-        </div>
-
-        <div className="urban-data-layer-toggle">
-          <button
-            className={`panel-button urban-facility-experiment-toggle ${
-              layerVisibility["community-facilities"] ? "is-enabled" : ""
-            }`}
-            type="button"
-            aria-pressed={layerVisibility["community-facilities"]}
-            onClick={() =>
-              onLayerVisibilityChange(
-                "community-facilities",
-                !layerVisibility["community-facilities"],
-              )
-            }
-          >
-            Optional facility layer: {layerVisibility["community-facilities"] ? "On" : "Off"}
-          </button>
-          <p className="urban-facility-experiment-safety" role="note">
-            This layer describes OSM facility locations and mapped FEMA relationships
-            only. It does not report operations, availability, safety, vulnerability,
-            criticality, or emergency-service availability.
-          </p>
-          {layerVisibility["community-facilities"] && (
-            <p className="urban-facility-experiment-note">
-              Four reviewed OSM records are available in the facility-specific Grand
-              Isle window. Port Fourchon returned zero matching OSM records; absence
-              from OSM does not prove absence of facilities.
-            </p>
-          )}
-        </div>
-
-        <div className="urban-data-layer-toggle">
-          <button
-            className={`panel-button urban-la1-experiment-toggle ${
-              layerVisibility["la1-fema-experiment"] ? "is-enabled" : ""
-            }`}
-            type="button"
-            aria-pressed={layerVisibility["la1-fema-experiment"]}
-            onClick={() =>
-              onLayerVisibilityChange(
-                "la1-fema-experiment",
-                !layerVisibility["la1-fema-experiment"],
-              )
-            }
-          >
-            Experimental layer: {layerVisibility["la1-fema-experiment"] ? "On" : "Off"}
-          </button>
-          <p className="urban-la1-experiment-safety" role="note">
-            Line styling represents FEMA data relationships only—not current flooding,
-            closure, passability, evacuation suitability, or road safety.
-          </p>
-          <p className="urban-la1-experiment-layer-note">
-            The experimental layer draws the original OpenStreetMap LA-1 ways.
-            The simplified purple response routes are controlled separately,
-            above.
-          </p>
-          {layerVisibility["la1-fema-experiment"] && (
-            <div className="urban-la1-experiment-legend" aria-label="Experimental LA-1 legend">
-              <p>
-                <span
-                  className="urban-la1-line urban-la1-line-intersection"
-                  style={{ borderColor: urbanResilienceVisualColors.route }}
-                  aria-hidden="true"
-                />
-                <strong>Solid purple:</strong> mapped FEMA intersection found
-              </p>
-              <p>
-                <span className="urban-la1-line urban-la1-line-unknown" aria-hidden="true" />
-                <strong>Dashed gray:</strong> FEMA relationship Unknown
-              </p>
-              <p>
-                <span className="urban-la1-line urban-la1-line-no-intersection" aria-hidden="true" />
-                <strong>Thin slate:</strong> evaluated with no mapped intersection
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
       <UrbanResponseContextList routes={scenario.routes} resources={scenario.resources} />
 
-      <UrbanMapLegend visibility={layerVisibility} />
-
-      <section
-        className="urban-resilience-demo-section urban-data-attribution"
-        aria-labelledby="urban-data-attribution-title"
+      <CollapsibleSection
+        id="urban-data-sources-title"
+        title="Data sources & provenance"
+        group="urban-reference-sections"
+        badge="FEMA NFHL, OpenStreetMap, USGS 3DEP"
       >
-        <h2 id="urban-data-attribution-title">Data attribution</h2>
-        <p>
-          <a
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noreferrer"
-          >
-            © OpenStreetMap contributors (ODbL)
-          </a>
-          <span aria-hidden="true"> · </span>
-          <a
-            href="https://www.fema.gov/flood-maps/national-flood-hazard-layer"
-            target="_blank"
-            rel="noreferrer"
-          >
-            FEMA NFHL
-          </a>
-          <span aria-hidden="true"> · </span>
-          <a
-            href="https://www.usgs.gov/3d-elevation-program"
-            target="_blank"
-            rel="noreferrer"
-          >
-            USGS 3DEP
-          </a>
-        </p>
-      </section>
-
-      <UrbanTwinEventFeed events={scenario.events} />
-
-      <section className="urban-resilience-demo-section">
-        <h2>3D context</h2>
-        <p
-          className={`urban-osm-context-status ${
-            !osmBuildingsEnabled
-              ? "urban-osm-context-status-local"
-              : ionTokenConfigured
-              ? "urban-osm-context-status-configured"
-              : "urban-osm-context-status-unavailable"
-          }`}
-          role="status"
+        <section
+          className="urban-resilience-demo-subsection urban-data-attribution"
+          aria-labelledby="urban-data-attribution-title"
         >
-          {!osmBuildingsEnabled
-            ? "Additional 3D context: Off"
-            : ionTokenConfigured
-              ? "Additional 3D context: On"
-              : "Additional 3D context is unavailable"}
-        </p>
-        <p className="urban-osm-context-copy">
-          Colored buildings show the FEMA-zone classification. Optional
-          surrounding buildings provide visual context only.
-        </p>
-      </section>
+          <h3 id="urban-data-attribution-title" className="urban-subsection-heading">
+            Data attribution
+          </h3>
+          <p>
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noreferrer"
+            >
+              © OpenStreetMap contributors (ODbL)
+            </a>
+            <span aria-hidden="true"> · </span>
+            <a
+              href="https://www.fema.gov/flood-maps/national-flood-hazard-layer"
+              target="_blank"
+              rel="noreferrer"
+            >
+              FEMA NFHL
+            </a>
+            <span aria-hidden="true"> · </span>
+            <a
+              href="https://www.usgs.gov/3d-elevation-program"
+              target="_blank"
+              rel="noreferrer"
+            >
+              USGS 3DEP
+            </a>
+          </p>
+        </section>
+        <UrbanTwinEventFeed events={scenario.events} />
+      </CollapsibleSection>
 
-      <section className="urban-resilience-demo-section">
-        <h2>Current prototype scope</h2>
-        <p className="urban-resilience-demo-empty-state">
-          Real OpenStreetMap building footprints and real FEMA National Flood
-          Hazard Layer zone polygons for Grand Isle and Port Fourchon,
-          Louisiana, colored by a zone-based risk classification. Response
-          routes follow real LA Highway 1 road geometry; staging references
-          mark approximate inland town centers along the corridor.
-        </p>
-        <p className="urban-resilience-alignment-note" role="note">
-          This is a research classification, not an official flood
-          determination, insurance requirement, or evacuation order.
-        </p>
-      </section>
-
+      <CollapsibleSection
+        id="urban-research-title"
+        title="Research & experimental"
+        group="urban-reference-sections"
+      >
+        <ul className="urban-research-links">
+          <li>
+            <a
+              href="/experiments/arcgis-urban-resilience/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              ArcGIS portability experiment
+            </a>
+          </li>
+        </ul>
+      </CollapsibleSection>
     </aside>
   );
 }

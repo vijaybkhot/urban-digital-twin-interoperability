@@ -1,5 +1,38 @@
 # Devlog
 
+## 2026-10-06
+
+- Regrouped the urban panel into six sections (#118, HO-21), so the legend
+  sits next to the layer toggles it describes and reference material can be
+  collapsed. After the header and the red disclaimer: Study area & scenario,
+  Data layers (legend, toggles, 3D context), Selected feature, Response
+  context, Data sources & provenance, and Research & experimental. The first
+  four start open; the last two start collapsed. They use native
+  `<details>`/`<summary>`, so keyboard operation needs no React state.
+- Safety notes are not hidden. The spec said no section containing a note may
+  start collapsed, but it also put two notes in collapsed sections: the
+  provenance-feed note and the prototype-scope note. Resolved by keeping each
+  note visible with what it qualifies: the feed note stays with the feed
+  (they open together), and "Current prototype scope" with its note moved into
+  the always-open Study area & scenario section, since it describes the
+  building colors that are always on the map.
+- Moved, not rewritten: every existing sentence, control, and id is
+  unchanged. Section titles and the ArcGIS link label are the only new text,
+  and former section titles became sub-headings. Added
+  `docs/urban-resilience-panel-regression-checklist.md`, the manual check for
+  panel changes.
+- To shorten the scroll without hiding safety text: section titles stick to
+  the top of the panel while scrolling, the two collapsed-by-default sections
+  open one at a time, the "Scenario" details inside Study area & scenario
+  start collapsed (name and area repeat the panel title, and the description
+  overlaps "Current prototype scope"), the staging-reference list inside
+  Response context starts collapsed (each entry repeats the caveat that the section's
+  always-visible note already states), and the "3D context" block now shows only when the
+  optional ion 3D context is enabled (in the default off state it restated the
+  legend and offered no action).
+- Not changed: `ViewerAdapter`, `CesiumViewerAdapter`, `CesiumScene`,
+  `src/cesium/*`, and `public/`.
+
 ## 2026-10-05
 
 - Consolidated the three selected-feature inspectors into one "Selected

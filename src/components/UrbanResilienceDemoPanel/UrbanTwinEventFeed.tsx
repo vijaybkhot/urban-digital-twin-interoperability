@@ -18,10 +18,12 @@ export function UrbanTwinEventFeed({ events }: UrbanTwinEventFeedProps) {
 
   return (
     <section
-      className="urban-resilience-demo-section urban-event-feed"
+      className="urban-resilience-demo-subsection urban-event-feed"
       aria-labelledby="urban-event-feed-title"
     >
-      <h2 id="urban-event-feed-title">Data provenance feed</h2>
+      <h3 id="urban-event-feed-title" className="urban-subsection-heading">
+        Data provenance feed
+      </h3>
       <p className="urban-event-feed-note" role="note">
         These entries document where this scenario&apos;s real data came from and how it was
         classified. This is not live monitoring.
