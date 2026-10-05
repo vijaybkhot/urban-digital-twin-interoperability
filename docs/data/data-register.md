@@ -576,12 +576,11 @@ language described above).
 
 ---
 
-## 8. Project Configuration (`existing-demo` / `workflow` default)
+## 8. Project Configuration (`existing-demo`)
 
-**Purpose.** Drives the `existing-demo` mode ("Decision Loop Demo") and the
-default `workflow` mode's initial camera — a facility scene with 3 radiation
-measurement points, 1 GLB model asset, and 3 model-linked annotations. This
-predates the Sea Grant urban-resilience work; it is the repository's original
+**Purpose.** Drives the `existing-demo` mode ("Decision Loop Demo") — a
+facility scene with 3 radiation measurement points, 1 GLB model asset, and 3
+model-linked annotations. This predates the Sea Grant urban-resilience work; it is the repository's original
 legacy proof-of-concept scene.
 
 **Study area. ⚠️ Not Louisiana.** Coordinates are in Pennsylvania

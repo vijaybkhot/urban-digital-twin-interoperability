@@ -20,9 +20,9 @@ npm run dev
 ```
 
 Open `http://localhost:5173/`. **What you should see:** the app opens in
-`workflow` mode — a "Mock Reconstruction Workflow" panel over a Cesium globe,
-with buttons to open the other four modes. This is expected; it is not the
-Sea Grant research deliverable (see "The five modes" below for which one is).
+`urban-resilience-demo` mode — the Sea Grant research deliverable — with the
+"Grand Isle & Port Fourchon Coastal Resilience" panel on the left over a Cesium
+view of Grand Isle, and a mode switcher in the bottom-right corner.
 
 Then run the full offline check:
 
@@ -44,22 +44,15 @@ known setup and pipeline issues and their fixes, see
 
 | Mode | Classification | What it is |
 | --- | --- | --- |
-| `workflow` (current default on launch) | **MOCK** | New-project setup + browser-only image intake + a simulated COLMAP reconstruction job. No real photogrammetry runs. |
-| `existing-demo` | **MOCK / LEGACY** | The original controlled-facility POC — radiation dose-rate readings from `public/project_config.json`. Its coordinates are in Pennsylvania, unrelated to the Sea Grant study areas — a known leftover, not a bug (see the [data register](../data/data-register.md#8-project-configuration-existing-demo--workflow-default)). |
+| `urban-resilience-demo` (default on launch) | **IMPLEMENTED, REAL DATA — this is the Sea Grant deliverable** | Real Grand Isle / Port Fourchon building, road, and FEMA flood-hazard data. Everything else in this guide's "reading order" below is about this mode. |
+| `workflow` | **MOCK** | New-project setup + browser-only image intake + a simulated COLMAP reconstruction job. No real photogrammetry runs. |
+| `existing-demo` | **MOCK / LEGACY** | The original controlled-facility POC — radiation dose-rate readings from `public/project_config.json`. Its coordinates are in Pennsylvania, unrelated to the Sea Grant study areas — a known leftover, not a bug (see the [data register](../data/data-register.md#8-project-configuration-existing-demo)). |
 | `modular-demo` | **MOCK** | A modular-housing proposal scenario (factory, logistics, construction site). Not connected to real factories, robotics, or logistics systems. |
 | `disaster-demo` | **MOCK / FICTIONAL** | A fictional Baton Rouge-area neighborhood with a synthetic flood layer. Explicitly labeled "Demonstration only. Not for real emergency use." |
-| `urban-resilience-demo` | **IMPLEMENTED, REAL DATA — this is the Sea Grant deliverable** | Real Grand Isle / Port Fourchon building, road, and FEMA flood-hazard data. Everything else in this guide's "reading order" below is about this mode. |
 
-**Note on the table above:** which mode the app *opens in by default* and
-which mode is *the primary research deliverable* are two separate facts.
-Today they're different (`workflow` is still the default; see #127/HO-25,
-tracked to change this). If you land on this page after that issue merges
-and the app now opens directly into `urban-resilience-demo`, only the
-parenthetical in the first row is stale — nothing else in this table changes.
-
-Mode switching in the running app is currently a set of buttons duplicated
-across each panel (tracked for consolidation into one shared switcher in
-#114/HO-17) — from any mode, look for a button labeled "Open \_\_\_ demo."
+To change mode, use the switcher in the bottom-right corner of the app:
+"Open urban resilience demo" is always shown, and the other four modes are
+under "Other demo modes".
 
 ## Reading order
 
