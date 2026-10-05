@@ -1,5 +1,29 @@
 # Devlog
 
+## 2026-10-05
+
+- Consolidated the three selected-feature inspectors into one "Selected
+  feature" section (#117, HO-20). Selections were already mutually
+  exclusive in `AppShell`, but the property, facility, and LA-1 inspectors
+  all stayed mounted, so two of them always showed empty-state text next to
+  the one real answer. The new `UrbanSelectedFeatureSection` renders exactly
+  one inspector for whatever is selected, or a single empty state built from
+  the existing prompt sentences (the facility and LA-1 prompts appear only
+  while those layers are on). The old "Turn on the layer…" prompts are gone,
+  since the toggles now live in "Data layers" (HO-19).
+- The ground-elevation block was mounted twice (inside the property and the
+  facility inspectors). It now renders once, below the active inspector, fed
+  by the same single lookup and the same record per selection as before.
+- Removed the one verbatim duplicate safety note: the property dashboard
+  repeated the scenario disclaimer that already sits at the top of the
+  panel. Every other note is unchanged.
+- The facility coverage note ("Four reviewed OSM records…") and the LA-1
+  line legend moved, text unchanged, from the inspectors to directly under
+  their toggles in "Data layers", shown while that layer is on — otherwise
+  they would only have appeared after a click.
+- Not changed: `UrbanGroundElevationDetails`, the elevation fetch,
+  `ViewerAdapter`, `CesiumViewerAdapter`, `CesiumScene`, and `src/cesium/*`.
+
 ## 2026-09-30
 
 - Gave the urban response routes their own independent on/off toggle
