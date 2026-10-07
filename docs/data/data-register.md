@@ -359,8 +359,11 @@ FEMA-relationship classification.
   only its western edge so it includes mapped municipal-service facilities")
   and is one of several distinct Grand Isle research windows in this
   codebase, now consolidated into one file, `scripts/lib/studyAreas.mjs`
-  (Issue #109 / HO-12), which every fetch/build/validate script imports from
-  rather than hardcoding its own literal. See
+  (Issue #109 / HO-12). Five scripts import from it; the one exception is
+  `scripts/buildUrbanResilienceLa1FemaExperiment.mjs`, which still holds its
+  own copy of the Grand Isle and Port Fourchon windows (values identical to
+  `grandIsleBaseBbox` and `portFourchonBbox`; see "Known cross-cutting
+  issues" below). See
   [`docs/data/regeneration.md`](regeneration.md) (#107) for the pipeline
   context.
 - Port Fourchon: `[29.09, -90.22, 29.17, -90.14]` (same as dataset #1).
@@ -671,15 +674,20 @@ active work.
 
 ## Known cross-cutting issues affecting multiple datasets
 
-- **Three inconsistent Grand Isle bounding-box extents** across the fetch,
-  build, and validate scripts (datasets #1/#3/#4 use west edge `-89.99`;
-  dataset #5 and its downstream elevation sample use `-90.005`; the base
-  data validator uses a looser superset). Tracked for consolidation into a
-  single source of truth, **preserving every current value exactly**, in
-  Issue #109 (HO-12).
+- **Three distinct Grand Isle bounding-box extents, kept deliberately**
+  (datasets #1/#3/#4 use west edge `-89.99`; dataset #5 and its downstream
+  elevation sample use `-90.005`; the base data validator uses a looser
+  superset). Issue #109 (HO-12, closed) consolidated them into named entries
+  in `scripts/lib/studyAreas.mjs`, **preserving every value exactly**, and
+  five scripts now import from that file. **One leftover:**
+  `scripts/buildUrbanResilienceLa1FemaExperiment.mjs` still declares its own
+  `STUDY_AREAS` with literal Grand Isle and Port Fourchon windows. Its values
+  are identical to `grandIsleBaseBbox` and `portFourchonBbox` today, so no
+  artifact is affected, but the copy could drift if the shared file changes.
 - **Circular / sequential regeneration dependency** between datasets #1, #5,
   and #6, and the pinned-identity risk in dataset #6 if #1 or #5 is
-  regenerated. Full graph and migration procedure: Issue #107 (HO-10).
+  regenerated. Full graph, run order, and migration procedure:
+  [`docs/data/regeneration.md`](regeneration.md) (Issue #107, HO-10, closed).
 - **The facility build's fetch/classify mismatch** (dataset #5) — resolved in
   Issue #108 (HO-11): unclassified amenity types are now skipped and counted,
   not fatal.
