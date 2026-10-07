@@ -1,6 +1,26 @@
 # Devlog
 
-## 2026-10-08
+## 2026-10-06
+
+- Added the handoff acceptance test (#121, HO-24): `docs/handoff/acceptance-test.md`,
+  an 11-task checklist the continuing researcher runs unaided from a fresh
+  clone while the author only observes, and
+  `docs/handoff/acceptance-test-evidence.md`, an empty template for recording
+  that session. Every question asked aloud is logged word for word as a
+  documentation defect. The regeneration task runs in a scratch clone and
+  commits nothing. The test itself has not been run yet; #121 stays open
+  until it has.
+- Corrected `docs/data/data-register.md`: the bounding-box consolidation
+  (#109, HO-12) is done, not "tracked". While checking, found that
+  `scripts/buildUrbanResilienceLa1FemaExperiment.mjs` still holds its own
+  copy of the Grand Isle and Port Fourchon windows instead of importing them
+  from `scripts/lib/studyAreas.mjs`. The values are identical, so no data is
+  affected. Recorded in the register and the continuation roadmap; the script
+  is unchanged.
+- Not changed: any code, data, or script.
+
+## 2026-10-05
+
 
 - Added the continuation roadmap, `docs/handoff/continuation-roadmap.md`
   (#120, HO-23), linked from `ROADMAP.md`. It opens with Vijay's note on what
@@ -16,8 +36,6 @@
   design.
 - Marked the duplicated ground-elevation component as resolved (HO-20) in the
   layers doc's known-issues table.
-
-## 2026-10-07
 
 - Added `docs/research/scenario-mapping.md` (#119, HO-22). It maps the
   project's four proposed scenarios (A1 event-specific property exposure, A2
@@ -57,8 +75,6 @@
   and `workflow` is no longer the default. The onboarding link to that
   section was updated to the new heading.
 
-## 2026-10-06
-
 - Regrouped the urban panel into six sections (#118, HO-21), so the legend
   sits next to the layer toggles it describes and reference material can be
   collapsed. After the header and the red disclaimer: Study area & scenario,
@@ -89,8 +105,6 @@
   legend and offered no action).
 - Not changed: `ViewerAdapter`, `CesiumViewerAdapter`, `CesiumScene`,
   `src/cesium/*`, and `public/`.
-
-## 2026-10-05
 
 - Consolidated the three selected-feature inspectors into one "Selected
   feature" section (#117, HO-20). Selections were already mutually

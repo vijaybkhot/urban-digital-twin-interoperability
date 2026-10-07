@@ -35,8 +35,8 @@ against already-committed data, no network calls. It should finish green with
 no edits to anything under `public/data/`.
 
 If either step behaves differently than described here, that is a
-documentation defect — fix this file or file an issue, per the acceptance
-test in `docs/handoff/acceptance-test.md` once it exists (#121, HO-24). For
+documentation defect — fix this file or file an issue, per the
+[handoff acceptance test](acceptance-test.md) (#121, HO-24). For
 known setup and pipeline issues and their fixes, see
 [`docs/handoff/troubleshooting.md`](troubleshooting.md).
 

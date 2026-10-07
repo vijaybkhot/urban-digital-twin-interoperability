@@ -6,8 +6,8 @@ cause, then the fix, and says explicitly whether the underlying condition
 is benign or something you need to act on.
 
 If you hit something not listed here, that is a documentation gap — see the
-acceptance test in `docs/handoff/acceptance-test.md` (#121, HO-24) once it
-exists, or file an issue.
+[handoff acceptance test](acceptance-test.md) (#121, HO-24), or file an
+issue.
 
 ## Setup
 
